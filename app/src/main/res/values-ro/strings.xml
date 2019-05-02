@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Conturi</string>
+    <string name="layout_title">Conturi</string>
+    <string name="ir_red">TV</string>
+    <string name="ir_green">Logare</string>
+    <string name="ir_yellow">Ajutor</string>
+    <string name="ir_blue">Introduceți un ID de utilizator ...</string>
+    <string name="hint_account">introduce</string>
+    <string name="button_account">Introduceți un ID de utilizator ...</string>
+    <string name="button_cuenta">introduce</string>
+    <string name="hint_cuenta">"Introduceți un ID "</string>
+    <string name="esp">SPA</string>
+    <string name="ita">ITA</string>
+    <string name="back">Înapoi</string>
+    <string name="no_user">Utilizador</string>
+    <string name="no_id">ID</string>
+
+    <string name="loading_layout_title">Începe sesiunea</string>
+    <string name="loading_layout_stand_by">Vă rog așteptați…</string>
+
+    <string name="welcome_message_head">Buna\u0020</string>
+    <string name="welcome_message_tail">, sunteți bineveniți</string>
+    <string name="id_not_entered">Introduceți un ID de utilizator pentru a vă conecta</string>
+    <string name="id_not_valid">Nu există un utilizator cu id:\u0020</string>
+    <string name="not_installed_app">Eroare: aplicația nu este instalată</string>
+    <string name="date">EEEE dd MMMM, yyyy</string>
+    <string name="connection_error">Eroare: server</string>
+</resources>

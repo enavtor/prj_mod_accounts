@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Accounts</string>
+    <string name="layout_title">Accounts</string>
+    <string name="ir_red">TV</string>
+    <string name="ir_green">Login</string>
+    <string name="date">EEEE dd MMMM, yyyy</string>
+    <string name="ir_yellow">Settings</string>
+    <string name="ir_blue">Help</string>
+    <string name="hint_account">Enter a user ID...</string>
+    <string name="button_account">Enter</string>
+    <string name="hint_cuenta">Enter a user ID</string>
+    <string name="button_cuenta">Enter</string>
+    <string name="esp">SPA</string>
+    <string name="ita">ITA</string>
+    <string name="back">Back</string>
+    <string name="no_user">User</string>
+    <string name="no_id">ID</string>
+
+    <string name="loading_layout_title">Logging into server</string>
+    <string name="loading_layout_stand_by">Please stand by…</string>
+
+    <!--\u0020 means a white space-->
+    <string name="welcome_message_head">Hello\u0020</string>
+    <string name="welcome_message_tail">, we welcome you</string>
+    <string name="id_not_entered">Enter a user ID to login</string>
+    <string name="connection_error">Server connection error, please try again</string>
+    <string name="id_not_valid">There is not a user with id:\u0020</string>
+    <string name="not_installed_app">Error: application not installed</string>
+</resources>

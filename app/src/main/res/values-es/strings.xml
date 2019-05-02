@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cuentas</string>
+    <string name="layout_title">Cuentas</string>
+    <string name="ir_red">TV</string>
+    <string name="ir_green">Iniciar sesión</string>
+    <string name="ir_yellow">Ajustes</string>
+    <string name="ir_blue">Ayuda</string>
+    <string name="hint_account">Introduce un ID de usuario...</string>
+    <string name="button_account">Aceptar</string>
+    <string name="button_cuenta">Aceptar</string>
+    <string name="hint_cuenta">Introduce un ID</string>
+    <string name="esp">ESP</string>
+    <string name="ita">ITA</string>
+    <string name="back">Volver</string>
+    <string name="no_user">Usuario</string>
+    <string name="no_id">ID</string>
+
+    <string name="loading_layout_title">Iniciando sesión</string>
+    <string name="loading_layout_stand_by">Espere por favor…</string>
+
+    <!--\u0020 means a white space-->
+    <string name="welcome_message_head">Hola\u0020</string>
+    <string name="welcome_message_tail">, te damos la bienvenida</string>
+    <string name="id_not_entered">Introduce un ID de usuario para iniciar sesión</string>
+    <string name="id_not_valid">No existe un usurario con ID:\u0020</string>
+    <string name="connection_error">Error al conectar con el servidor, vuelva a intentarlo</string>
+    <string name="not_installed_app">Error: applicacion no instalada</string>
+    <string name="date">EEEE, dd - MMMM - yyyy</string>
+</resources>

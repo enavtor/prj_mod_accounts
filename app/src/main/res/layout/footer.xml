@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/corner_downLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:id="@+id/footer_contentLeft"
+            android:layout_width="@dimen/footer_ir_width"
+            android:layout_height="55dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ir_red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:background="@drawable/focus"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/img_ir_red"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/ir_button"
+                    android:backgroundTint="@color/sh_red_medium"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txt_ir_red"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/ir_red"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ir_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:background="@drawable/focus"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:id="@+id/img_ir_green"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/ir_button"
+                    android:backgroundTint="@color/sh_green_medium"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txt_ir_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/ir_green"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ir_yellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:background="@drawable/focus"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/img_ir_yellow"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/ir_button"
+                    android:backgroundTint="@color/sh_yellow_medium"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txt_ir_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/ir_yellow"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ir_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:background="@drawable/focus"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/focus_padding"
+                android:visibility="invisible">
+
+                <LinearLayout
+                    android:id="@+id/img_ir_blue"
+                    android:layout_width="@dimen/ir_icon"
+                    android:layout_height="@dimen/ir_icon"
+                    android:layout_margin="@dimen/ir_icon_margin"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/ir_button"
+                    android:backgroundTint="@color/sh_blue_medium"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txt_ir_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/ir_blue"
+                    android:textSize="@dimen/txt_ir"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sstatus_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentEnd="true">
+        <TextView
+            android:id="@+id/version_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5dp"
+            android:fontFamily="sans-serif-light"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <!--RelativeLayout
+        android:id="@+id/virtual_back_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/calendar_focus"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/focus_padding">
+
+        <ImageView
+            android:id="@+id/virtual_back"
+            android:layout_width="@dimen/icon_header_width"
+            android:layout_height="@dimen/icon_header_height"
+            android:scaleX="0.65"
+            android:scaleY="0.8"
+            android:layout_gravity="center"
+            android:background="@drawable/back_arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/virtual_back"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="6dp"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout-->
+</RelativeLayout>

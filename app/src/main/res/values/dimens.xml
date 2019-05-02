@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="overscan_width">1226dp</dimen>
+    <dimen name="overscan">23.4dp</dimen>
+    <dimen name="overscan_height">663dp</dimen>
+    <dimen name="header_height">80dp</dimen>
+    <dimen name="icon_header_height">39dp</dimen>
+    <dimen name="icon_header_width">39dp</dimen>
+    <dimen name="header_dateAndTime">390dp</dimen>
+    <dimen name="header_time">130dp</dimen>
+    <dimen name="footer_ir_width">780dp</dimen>
+    <dimen name="footer_ir_height">45dp</dimen>
+    <dimen name="footer_layout_padding">40dp</dimen>
+    <dimen name="divider_width">1dp</dimen>
+    <dimen name="ir_icon">18dp</dimen>
+    <dimen name="icon_margin">6dp</dimen>
+    <dimen name="ir_icon_margin">13dp</dimen>
+    <dimen name="footer_status_height">403dp</dimen>
+    <dimen name="footer_status_width">52dp</dimen>
+    <dimen name="status_icon_width">26dp</dimen>
+    <dimen name="status_icon_height">26dp</dimen>
+    <dimen name="status_icon_margin">2.6dp</dimen>
+    <dimen name="txt_title">39sp</dimen>
+    <dimen name="item_time">28.6sp</dimen>
+    <dimen name="txt_date">20.8sp</dimen>
+    <dimen name="txt_percent">10.4sp</dimen>
+    <dimen name="txt_ir">20sp</dimen>
+    <dimen name="txt_header">18.2sp</dimen>
+    <dimen name="txt_id">18.2sp</dimen>
+    <dimen name="focus_padding">10dp</dimen>
+
+    <dimen name="fragment_main_column_width">250dp</dimen>
+    <dimen name="fragment_main_spacing">10dp</dimen>
+    <dimen name="fragment_main_margin">10dp</dimen>
+    <dimen name="fragment_main_banner">250dp</dimen>
+    <dimen name="fragment_main_tv_height">141dp</dimen>
+
+    <dimen name="fragment_item_layout_height">150dp</dimen>
+    <dimen name="fragment_item_image_height">70dp</dimen>
+    <dimen name="fragment_item_text_view_height">60dp</dimen>
+    <dimen name="fragment_item_padding">2dp</dimen>
+    <dimen name="fragment_item_description_padding">5dp</dimen>
+    <dimen name="fragment_item_description_margin">20dp</dimen>
+    <dimen name="fragment_item_text_size">20sp</dimen>
+    <dimen name="fragment_item_description_size">20sp</dimen>
+
+    <dimen name="activity_status_main_layout_padding">50dp</dimen>
+    <dimen name="activity_status_layout_padding">30dp</dimen>
+    <dimen name="activity_status_layout_inner_padding">5dp</dimen>
+    <dimen name="activity_status_title_text_size">30sp</dimen>
+    <dimen name="activity_status_subtitle_padding">20dp</dimen>
+    <dimen name="activity_status_led_height">5sp</dimen>
+    <dimen name="activity_status_text_margin">15sp</dimen>
+    <dimen name="activity_status_back_margin">20dp</dimen>
+    <dimen name="activity_status_back_text_margin">10dp</dimen>
+    <dimen name="activity_status_back_padding">5dp</dimen>
+    <dimen name="activity_status_back_text_size">15sp</dimen>
+    <dimen name="activity_status_device_width">565dp</dimen>
+
+    <!-- reminder_rectangle -->
+    <dimen name="corner_radius">8dp</dimen>
+    <dimen name="rectangle_shift">5dp</dimen>
+    <dimen name="rectangle_padding">5dp</dimen>
+
+    <!-- activity_reminder -->
+    <dimen name="medium_padding">5dp</dimen>
+    <dimen name="large_padding">10dp</dimen>
+    <dimen name="container_height">200dp</dimen>
+    <dimen name="container_margin">60dp</dimen>
+    <dimen name="survey_container_margin">20dp</dimen>
+    <dimen name="icon_width">250dp</dimen>
+    <dimen name="clock_size">50dp</dimen>
+    <dimen name="blue_button_size">50dp</dimen>
+    <dimen name="info_layout_width">850dp</dimen>
+    <dimen name="reminder_info_margin_up">10dp</dimen>
+    <dimen name="font_size_title">50sp</dimen>
+    <dimen name="font_size_medium">35sp</dimen>
+
+</resources>
