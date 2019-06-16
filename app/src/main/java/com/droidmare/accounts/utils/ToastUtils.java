@@ -1,4 +1,4 @@
-package com.droidmare.accounts.Utils;
+package com.droidmare.accounts.utils;
 
 import android.content.Context;
 import android.os.CountDownTimer;
@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 //Utils for creating custom Toasts
 //@author Eduardo on 09/07/2018.
-
 public class ToastUtils {
 
     private static Toast toast = null;
@@ -19,6 +18,11 @@ public class ToastUtils {
 
     public static final int DEFAULT_TOAST_SIZE = 25;
     public static final int DEFAULT_TOAST_DURATION = 5;
+
+    //Method that creates a custom toast with the default size and duration:
+    public static void makeDefaultCustomToast(final Context context, final String text) {
+        makeCustomToast(context, text, DEFAULT_TOAST_SIZE, DEFAULT_TOAST_DURATION);
+    }
 
     //Method that creates and shows a Toast with a specific text size and duration (in seconds):
     public static void makeCustomToast(final Context context, final String text, final int size, final int seconds) {

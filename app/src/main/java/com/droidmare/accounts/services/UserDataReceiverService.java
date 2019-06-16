@@ -5,122 +5,99 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import com.droidmare.accounts.utils.ImageUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
-
 public class UserDataReceiverService extends IntentService {
 
-    public static final String USERDATA_PREFS = "userDataPrefsFile";
     private static final String TAG = UserDataReceiverService.class.getCanonicalName();
 
-    private static int userId = -1;
+    private static final String USER_DATA_PREF = "userDataPrefFile";
+
+    private static final String USER_PREF_KEY = "userDataPrefKey";
+
+    private static String userJsonString;
+
+    private static String userId;
     private static String userName;
-    private static String avatarUri;
-    private static Bitmap avatarImage;
+    private static String userSurname;
+    private static String avatarString;
+    private static String userNickname;
+    private static String userPassword;
 
-    private static int pref_id_userId;
-    private static String pref_id_userName;
-    private static String pref_id_avatarUri;
-    private static String pref_id_avatarImage;
+    public UserDataReceiverService() { super(TAG); }
 
-    public UserDataReceiverService() {
-        super("UserDataReceiverService");
-    }
     @Override
-    public void onHandleIntent(Intent eventIntent) {
-        Log.d("myTag", "onHandleIntent");
-        userId = eventIntent.getIntExtra("userId", -1);
-        userName = eventIntent.getStringExtra("userName");
-        avatarUri = eventIntent.getStringExtra("avatarUri");
-        downloadAvatarBitmap();
+    public void onHandleIntent(Intent dataIntent) {
 
-        writeSharedPrefs(userId, userName, avatarUri , avatarImage);
+        Log.d(TAG, "onHandleIntent");
+
+        userJsonString = dataIntent.getStringExtra("userJsonString");
+
+        writeSharedPrefs();
+        setUserAttributes();
     }
 
-    public static void readSharedPrefs(Context context) {
-        Log.d("myTag", "readSharedPrefs");
+    private void writeSharedPrefs() {
 
-        SharedPreferences prefs = context.getSharedPreferences(USERDATA_PREFS, MODE_PRIVATE);
+        Log.d(TAG, "writeSharedPrefs");
 
-        pref_id_userId = prefs.getInt("id_userId", -1);
-        pref_id_userName = prefs.getString("id_userName", null);
-        pref_id_avatarUri = prefs.getString("id_avatarUri", null);
-        pref_id_avatarImage = prefs.getString("id_avatarImage", null);
+        SharedPreferences.Editor editor = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE).edit();
 
-        if (pref_id_userId != -1 && pref_id_userName != null && pref_id_avatarUri != null) {
-            userId = pref_id_userId;
-            userName = pref_id_userName;
-            avatarUri = pref_id_avatarUri;
-            avatarImage = StringToBitMap(pref_id_avatarImage);
-        }
-    }
+        editor.putString(USER_PREF_KEY, userJsonString);
 
-    private void writeSharedPrefs(int userId,String userName,String avatarUri, Bitmap avatarImage) {
-        Log.d("myTag", "writeSharedPrefs");
-
-        SharedPreferences.Editor editor = getSharedPreferences(USERDATA_PREFS, MODE_PRIVATE).edit();
-        editor.putInt("id_userId", userId);
-        editor.putString("id_userName", userName);
-        editor.putString("id_avatarUri", avatarUri);
-        editor.putString("id_avatarImage",BitMapToString(avatarImage));
         editor.apply();
     }
 
+    private static void setUserAttributes() {
 
-    //Method that downloads and stores the current user's avatar image:
-    private void downloadAvatarBitmap () {
         try {
-            InputStream response = new java.net.URL(avatarUri).openStream();
-            avatarImage = BitmapFactory.decodeStream(response);
-        } catch (MalformedURLException urle) {
-            Log.e(TAG,"downloadAvatarBitmap. MalformedURLException: " + urle.getMessage());
-        }catch (IOException ioe) {
-            Log.e(TAG, "downloadAvatarBitmap. IOException: " + ioe.getMessage());
+            JSONObject userJson = new JSONObject(userJsonString);
+
+            userId = userJson.getString("_id");
+            userName = userJson.getString("name");
+            userSurname = userJson.getString("surname");
+            avatarString = userJson.getString("avatar");
+            userNickname = userJson.getString("nickname");
+            userPassword = userJson.getString("password");
+
+        } catch (JSONException jsonException) {
+            Log.e(TAG, "setUserAttributes(). JSONException: " + jsonException.getMessage());
         }
     }
 
-    //Method that returns the user id:
-    public static int getUserId() { return userId; }
+    public static void readSharedPrefs(Context context) {
+        Log.d(TAG, "readSharedPrefs");
+
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+
+        userJsonString = sharedPref.getString(USER_DATA_PREF, "");
+
+        setUserAttributes();
+    }
+
+       //Method that returns the user id:
+    public static String getUserId() { return userId; }
 
     //Method that returns the user name:
-    public static String getUserName() { return userName; }
+    public static String getUserName() { return userName + "" + userSurname; }
 
-    //Method that returns the user avatar:
-    public static Bitmap getAvatarImage() { return avatarImage; }
+    //Method that returns the user avatar decoded:
+    public static Bitmap getDecodedAvatar() { return ImageUtils.decodeBitmapString(avatarString); }
 
-    //Method that resets the user parameters values (logout):
-    public static void resetUser() {
-        userId = -1;
-        userName = null;
-        avatarUri = null;
-        avatarImage = null;
-    }
+    //Method that returns the user nickname:
+    public static String getUserNickname() { return userNickname; }
 
-    public static String BitMapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-
-    public static Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
+    //Method that returns the user surname:
+    public static String getUserPassword() { return userPassword; }
 }
