@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginTop="60dp"
+    android:layout_centerInParent="true">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/file_list_view"
+        android:layout_width="1150dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="90dp"
+        android:layout_marginEnd="20dp"
+        android:layout_above="@id/layout_description"
+        android:focusable="true"/>
+
+    <LinearLayout
+        android:id="@+id/layout_description"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="53dp"
+        android:paddingEnd="0dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="88dp"
+            android:gravity="center_vertical"
+            android:textSize="40sp"
+            android:maxLines="2"
+            android:textColor="@color/colorTextSplash"
+            android:ellipsize="end"/>
+    </LinearLayout>
+</RelativeLayout>
+

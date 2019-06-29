@@ -200,7 +200,7 @@
             android:layout_height="@dimen/icon_header_height"
             android:scaleX="0.65"
             android:scaleY="0.8"
-            android:layout_gravity="center"
+            android:layout_gravity="element_user_login"
             android:background="@drawable/back_arrow" />
 
         <TextView

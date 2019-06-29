@@ -26,6 +26,13 @@ public class UserDataReceiverService extends IntentService {
 
     private static final String USER_PREF_KEY = "userDataPrefKey";
 
+    public static final String USER_ID_FIELD = "_id";
+    public static final String USER_NAME_FIELD = "name";
+    public static final String USER_SURNAME_FIELD = "surname";
+    public static final String USER_AVATAR_FIELD = "avatar";
+    public static final String USER_NICKNAME_FIELD = "nickname";
+    public static final String USER_PASSWORD_FIELD = "password";
+
     private static String userJsonString;
 
     private static String userId;
@@ -34,6 +41,8 @@ public class UserDataReceiverService extends IntentService {
     private static String avatarString;
     private static String userNickname;
     private static String userPassword;
+
+    public static boolean infoSet = false;
 
     public UserDataReceiverService() { super(TAG); }
 
@@ -46,6 +55,8 @@ public class UserDataReceiverService extends IntentService {
 
         writeSharedPrefs();
         setUserAttributes();
+
+        infoSet = true;
     }
 
     private void writeSharedPrefs() {
@@ -61,15 +72,15 @@ public class UserDataReceiverService extends IntentService {
 
     private static void setUserAttributes() {
 
-        try {
+        if (!userJsonString.equals("")) try {
             JSONObject userJson = new JSONObject(userJsonString);
 
-            userId = userJson.getString("_id");
-            userName = userJson.getString("name");
-            userSurname = userJson.getString("surname");
-            avatarString = userJson.getString("avatar");
-            userNickname = userJson.getString("nickname");
-            userPassword = userJson.getString("password");
+            userId = userJson.getString(USER_ID_FIELD);
+            userName = userJson.getString(USER_NAME_FIELD);
+            userSurname = userJson.getString(USER_SURNAME_FIELD);
+            avatarString = userJson.getString(USER_AVATAR_FIELD);
+            userNickname = userJson.getString(USER_NICKNAME_FIELD);
+            userPassword = userJson.getString(USER_PASSWORD_FIELD);
 
         } catch (JSONException jsonException) {
             Log.e(TAG, "setUserAttributes(). JSONException: " + jsonException.getMessage());
@@ -90,7 +101,7 @@ public class UserDataReceiverService extends IntentService {
     public static String getUserId() { return userId; }
 
     //Method that returns the user name:
-    public static String getUserName() { return userName + "" + userSurname; }
+    public static String getUserName() { return userName + " " + userSurname; }
 
     //Method that returns the user avatar decoded:
     public static Bitmap getDecodedAvatar() { return ImageUtils.decodeBitmapString(avatarString); }

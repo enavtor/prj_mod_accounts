@@ -15,6 +15,9 @@
     <color name="black_transparent">#7000</color>
     <color name="background">#FFD</color>
     <color name="focus">#707</color>
+    <color name="focus_dark">#660066</color>
+    <color name="focus_medium">#880088</color>
+    <color name="focus_light">#AA00AA</color>
     <color name="focus_background">#FCF</color>
     <color name="progress_bar">#009dff</color>
 
@@ -47,10 +50,35 @@
     <color name="fuchsia_dark">#815</color>
 
     <color name="white">#FFF</color>
+    <color name="white_less_transparent">#DDFFFFFF</color>
+    <color name="white_more_transparent">#BBFFFFFF</color>
     <color name="grey_background">#CCC</color>
     <color name="grey_light">#AAA</color>
+    <color name="grey_light_darker">#999</color>
     <color name="grey_medium">#555</color>
     <color name="grey_dark">#222</color>
     <color name="black">#000000</color>
 
+    <!--Files color resources-->
+
+    <color name="focus_translucent">#88FF77FF</color>
+    <color name="blue">#2979FF</color>
+    <color name="loaderColor">#00BCD4</color>
+    <color name="colorTextSplash">#323232</color>
+    <!--Main Acrtivity-->
+    <color name="progress_fg_start">#F57C00</color>
+    <color name="progress_fg_center">#EF6C00</color>
+    <color name="progress_fg_end">#E65100</color>
+    <color name="backgroundFooter">#CED1D3</color>
+    <color name="colorFocusButtonFooter">#664388CC</color>
+    <!--Card Color-->
+    <color name="cardColorText">#3B3B3B</color>
+    <color name="cardFocusedColor">#A2A</color>
+    <color name="OldCardFocusedColor">#0396A6</color>
+    <!--Archivos color-->
+    <color name="colorButtonExit">#FF0000</color>
+    <color name="colorButtonPresentation">#FFFF00</color>
+    <!--Player color-->
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="centerColorBanner">#75000000</color>
 </resources>

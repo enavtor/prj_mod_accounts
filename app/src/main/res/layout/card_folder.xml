@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cvBg"
+    android:layout_width="180dp"
+    android:layout_height="240dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:animateLayoutChanges="true"
+    card_view:cardElevation="0dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:alpha="0.5"
+    android:backgroundTint="@color/transparent"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:id="@+id/focus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:focusable="false"
+        android:background="@color/cardColorText">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:focusable="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_folder"
+            android:contentDescription="@string/app_name"/>
+
+        <RelativeLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp">
+
+            <RelativeLayout
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/icon_folder"
+                android:backgroundTint="@color/cardColorText"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/nameFile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/thumbnail"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView >

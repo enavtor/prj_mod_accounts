@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.droidmare.accounts.views.MainActivity;
+import com.droidmare.accounts.views.activities.MainActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;

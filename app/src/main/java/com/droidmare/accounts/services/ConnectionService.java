@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.droidmare.accounts.R;
 import com.droidmare.accounts.utils.ToastUtils;
-import com.droidmare.accounts.views.MainActivity;
+import com.droidmare.accounts.views.activities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +27,14 @@ public class ConnectionService extends IntentService {
     private static final String TAG = ConnectionService.class.getCanonicalName();
 
     //API base URL:
-    public static final String BASE_URL = "http://192.168.1.49:3000/user";
+    public static final String BASE_URL = "http://192.168.1.49:3000/user/";
+    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
+
+    //API request operations:
+    public static final String CREATE = "POST";
+    public static final String LOGIN = "GET";
+    public static final String EDIT = "PUT";
+    public static final String DELETE = "DELETE";
 
     //Connection properties:
     private static final int CONNECTION_TIMEOUT = 10000;
@@ -55,7 +62,7 @@ public class ConnectionService extends IntentService {
     private String userJsonString;
 
     //Control variable to know if the requested operation id of type GET:
-    private boolean requestedGET;
+    private boolean requestedLogin;
 
     //The response code returned by the connection object:
     private int responseCode;
@@ -77,11 +84,11 @@ public class ConnectionService extends IntentService {
 
         String requestedOperation = intent.getStringExtra("requestedOperation");
 
-        requestedGET = requestedOperation.equals("GET");
+        requestedLogin = requestedOperation.equals(LOGIN);
 
-        if (requestedGET) {
-            userNick = intent.getStringExtra("userNick");
-            userPass = intent.getStringExtra("userPass");
+        if (requestedLogin) {
+            userNick = intent.getStringExtra(UserDataReceiverService.USER_NICKNAME_FIELD);
+            userPass = intent.getStringExtra(UserDataReceiverService.USER_PASSWORD_FIELD);
         }
 
         else {
@@ -90,7 +97,16 @@ public class ConnectionService extends IntentService {
 
         connectAndRetrieve(requestedOperation, userNick, userPass);
 
-        if (requestedGET) performLogin();
+        if (requestedLogin) performLogin();
+
+        else if (requestedOperation.equals(CREATE)) {
+            try {
+                String message = new JSONObject(userJsonString).getString("message");
+                ToastUtils.makeDefaultCustomToast(getApplicationContext(), message);
+            } catch (JSONException jsonException) {
+                Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
+            }
+        }
     }
 
     //Method that establishes a connection to the API and performs the required operations based on the requestedOperation param:
@@ -98,7 +114,7 @@ public class ConnectionService extends IntentService {
 
         String apiURL = BASE_URL;
 
-        if (requestedGET) apiURL = apiURL + userNick + userPass;
+        if (requestedLogin) apiURL = apiURL + userNick + "/" + userPass;
 
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(apiURL).openConnection();
@@ -106,12 +122,13 @@ public class ConnectionService extends IntentService {
             connection.setRequestMethod(requestedOperation);
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
             connection.setReadTimeout(CONNECTION_TIMEOUT);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setChunkedStreamingMode(0);
-            connection.setRequestProperty(CONTENT_TYPE_PROPERTY_NAME, CONTENT_TYPE_PROPERTY_VALUE);
 
-            if (!requestedGET) {
+            if (!requestedLogin) {
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setChunkedStreamingMode(0);
+                connection.setRequestProperty(CONTENT_TYPE_PROPERTY_NAME, CONTENT_TYPE_PROPERTY_VALUE);
+
                 OutputStreamWriter outputStream = new OutputStreamWriter(connection.getOutputStream());
                 outputStream.write(userJsonString);
                 outputStream.close();
@@ -135,7 +152,7 @@ public class ConnectionService extends IntentService {
             connection.disconnect();
 
         } catch (IOException ie) {
-            Log.e(TAG, "connectAndRetrieve(). IOException: " + ie.getMessage());
+            Log.e(TAG, "connectAndRetrieve(). IOException: " + ie.toString());
         }
     }
 
@@ -167,7 +184,10 @@ public class ConnectionService extends IntentService {
         try {
             JSONObject userJson = new JSONObject(userJsonString);
 
-            String user = userJson.getString("name") + " " + userJson.getString("surname");
+            String name = userJson.getString(UserDataReceiverService.USER_NAME_FIELD);
+            String surname = userJson.getString(UserDataReceiverService.USER_SURNAME_FIELD);
+
+            String user = name + " " + surname;
 
             Intent launcher;
 
@@ -180,6 +200,13 @@ public class ConnectionService extends IntentService {
                 launcher.putExtra("userJsonString", userJsonString);
 
                 startService(launcher);
+            }
+
+            //The execution thread is going to be paused to let the UserDataReceiverService
+            //set the user info before it is displayed on the main activity user info view:
+            while (!UserDataReceiverService.infoSet) {
+                Log.d("PAUSEDTHREAD", "Paused");
+                pauseServiceThread(50);
             }
 
             //Refreshing the user info view:
@@ -195,6 +222,8 @@ public class ConnectionService extends IntentService {
 
         } catch (JSONException jsonException) {
             Log.e(TAG, "sendUserData(). JSONException: " + jsonException.getMessage());
+            ToastUtils.makeDefaultCustomToast(getApplicationContext(), userJsonString);
+            hideLoadingScreen();
         }
     }
 
@@ -203,10 +232,15 @@ public class ConnectionService extends IntentService {
         if (isMainActivityInstantiated()) mainActivityReference.get().hideLoadingScreen();
 
         //To avoid toasts overlapping with the loading screen, the thread is paused for 80 milliseconds after hiding the loading screen:
+        pauseServiceThread(80);
+    }
+
+    //Method that pauses the execution thread for the specified time:
+    private void pauseServiceThread(long millis) {
         try {
-            Thread.sleep(80);
+            Thread.sleep(millis);
         } catch (InterruptedException ie) {
-            Log.e(TAG, "hideLoadingScreen(). InterruptedException: " + ie.getMessage());
+            Log.e(TAG, "pauseServiceThread(). InterruptedException: " + ie.getMessage());
         }
     }
 

@@ -51,6 +51,8 @@ public class ImageUtils {
 
         if (bitmap == null) return null;
 
+        bitmap = scaleBitmap(bitmap);
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
