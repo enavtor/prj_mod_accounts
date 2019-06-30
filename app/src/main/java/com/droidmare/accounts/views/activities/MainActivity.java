@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     //Create new user layout elements:
     private String newUserEncodedAvatar;
 
+    private RelativeLayout newUserAvatarClickableBox;
     private ImageView newUserAvatarPreviewBox;
 
     private EditText newUserNameTextBox;
@@ -193,8 +194,9 @@ public class MainActivity extends AppCompatActivity {
             newUserEncodedAvatar = ImageUtils.encodeBitmapImage(defaultAvatar.getBitmap());
 
         newUserAvatarPreviewBox = findViewById(R.id.create_user_avatar_preview_box);
-
         newUserAvatarPreviewBox.setImageBitmap(ImageUtils.decodeBitmapString(newUserEncodedAvatar));
+
+        newUserAvatarClickableBox = findViewById(R.id.create_user_avatar_clickable_box);
 
         newUserNameTextBox = findViewById(R.id.create_user_name_input_box);
         newUserSurnameTextBox = findViewById(R.id.create_user_surname_input_box);
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        newUserAvatarPreviewBox.setOnClickListener(new View.OnClickListener() {
+        newUserAvatarClickableBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(getApplicationContext(), FilesActivity.class), 0);

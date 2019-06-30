@@ -15,10 +15,17 @@
             android:id="@+id/create_user_avatar_preview_box"
             android:layout_width="160dp"
             android:layout_height="160dp"
+            android:layout_marginEnd="30dp"/>
+
+        <RelativeLayout
+            android:id="@+id/create_user_avatar_clickable_box"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_marginEnd="30dp"
             android:focusable="true"
             android:clickable="true"
-            android:background="@drawable/focus"/>
+            android:alpha="0.6"
+            android:background="@drawable/focus_image" />
 
         <EditText
             android:id="@+id/create_user_name_input_box"
@@ -51,6 +58,36 @@
             android:textColorHint="@color/grey_light_darker"
             android:textCursorDrawable="@drawable/text_cursor_color" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="1dp"
+            android:background="@color/colorTextSplash" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center"
+            android:text="@string/create_user_sections_divider"
+            android:textAlignment="center"
+            android:textColor="@color/colorTextSplash"
+            android:textSize="25sp" />
+
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="1dp"
+            android:background="@color/colorTextSplash" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/create_user_nickname_input_box"

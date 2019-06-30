@@ -4,14 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidmare.accounts.R;
@@ -29,7 +27,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
 
     private final static int THUMB_SIZE = 200;
 
-    private int fileToFocus;
     private int focusedViewPosition;
 
     private FilesActivity filesActivity;
@@ -37,7 +34,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
     public FilesAdapter(ArrayList<Multimedia> items, FilesActivity activity) {
         fileList = items;
         filesActivity = activity;
-        fileToFocus = filesActivity.getElementToFocus();
         focusedViewPosition = -1;
     }
 
@@ -73,20 +69,12 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
         else {
             if (item.getBitmapIcon() == null) new ThumbnailTask(position, holder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void) null);
 
-            else {
-                holder.image.setImageBitmap(item.getBitmapIcon());
-                if (holder.play != null) holder.play.setAlpha(1f);
-            }
+            else holder.image.setImageBitmap(item.getBitmapIcon());
         }
 
         holder.name.setText(item.getName());
 
         holder.setBehaviour(item, itemIsFolder);
-
-        if (position == fileToFocus) {
-            holder.itemView.requestFocus();
-            fileToFocus = -1;
-        }
     }
 
     public int getFocusedPosition() { return focusedViewPosition; }
@@ -98,17 +86,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
 
         public TextView name;
 
-        ImageView image, play;
-        CardView cardView;
-        RelativeLayout focus;
+        ImageView image;
 
         FileViewHolder(View itemView) {
 
             super(itemView);
 
             image = itemView.findViewById(R.id.thumbnail);
-            cardView = itemView.findViewById(R.id.cvBg);
-            focus = itemView.findViewById(R.id.focus);
             name = itemView.findViewById(R.id.nameFile);
         }
 
@@ -118,17 +102,14 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
                 public void onFocusChange(View view, boolean hasFocus) {
 
                     if(hasFocus){
-                        focus.setBackgroundResource(R.drawable.focus_item);
-                        cardView.setAlpha(1);
+                        itemView.setAlpha(1f);
                         name.setTextColor(filesActivity.getResources().getColor(R.color.colorWhite));
                         focusedViewPosition = getAdapterPosition();
                         filesActivity.changeFileDescriptionText(name.getText().toString());
                     }
 
                     else{
-                        if (itemIsFolder) focus.setBackgroundResource(R.color.cardColorText);
-                        else focus.setBackgroundResource(R.color.transparent);
-                        cardView.setAlpha(0.5f);
+                        itemView.setAlpha(0.5f);
                         name.setTextColor(filesActivity.getResources().getColor(R.color.black));
                         focusedViewPosition = -1;
                         filesActivity.changeFileDescriptionText("");
@@ -214,8 +195,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
                 fileList.get(mPosition).setBitmapIcon(bitmap);
 
                 mHolder.image.setImageBitmap(bitmap);
-
-                if (mHolder.play != null) mHolder.play.setAlpha(1f);
             }
         }
     }

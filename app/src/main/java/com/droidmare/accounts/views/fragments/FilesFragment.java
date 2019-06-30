@@ -63,10 +63,11 @@ public class FilesFragment extends Fragment {
         fileGrid.setAdapter(filesAdapter);
 
         if (multimediaList.size() == 0) fileGrid.setFocusable(false);
+        else fileGrid.requestFocus();
 
         fileGrid.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        positionToFocus = -1;
+        positionToFocus = activity.getElementToFocus();
 
         //A scroll listener is added to the recycler view so if the file that must get the focus is not visible when circularly navigating,
         //it can be focused once the scroll operation has finished (moment in which the file will be visible and therefore focusable):
@@ -91,11 +92,36 @@ public class FilesFragment extends Fragment {
         currentScrolledY = 0;
 
         fileGrid.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            private final int positionToScrollTo = activity.getPositionToScrollTo();
+
             @Override
             public void onGlobalLayout() {
-                fileGrid.scrollBy(0, activity.getPositionToScrollTo());
-                activity.setViewsAfterFragmentLoaded();
-                fileGrid.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Log.e("SCROLLTEST", "onGlobalLayout");
+
+                if (currentScrolledY == 0 && positionToFocus > 9) {
+                    Log.e("SCROLLTEST", "1");
+                    fileGrid.scrollBy(0, positionToScrollTo);
+                }
+
+                else if (currentScrolledY == positionToScrollTo || positionToFocus <= 9) {
+
+                    if (positionToFocus > 4 && positionToFocus <= 9) {
+                        Log.e("SCROLLTEST", "2");
+                        fileGrid.scrollBy(0, positionToScrollTo);
+                    }
+
+                    Log.e("SCROLLTEST", "3");
+
+                    RecyclerView.ViewHolder item = fileGrid.findViewHolderForAdapterPosition(positionToFocus);
+                    if (item != null) item.itemView.requestFocus();
+                    positionToFocus = -1;
+
+                    activity.setViewsAfterFragmentLoaded();
+
+                    fileGrid.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
             }
         });
 

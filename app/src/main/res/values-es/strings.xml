@@ -6,14 +6,13 @@
     <string name="ir_green">Iniciar sesión</string>
     <string name="ir_yellow">Ajustes</string>
     <string name="ir_blue">Ayuda</string>
-    <string name="hint_create_user_name">Introduzca el nombre del usuario…</string>
-    <string name="hint_create_user_surname">Introduzca el apellido del usuario…</string>
-    <string name="hint_create_user_nickname">Introduzca el nickname del usuario…</string>
-    <string name="hint_create_user_password">Introduzca la contraseña del usuario…</string>
+    <string name="hint_create_user_name">Introduzca su nombre</string>
+    <string name="hint_create_user_surname">Introduzca su apellido</string>
+    <string name="create_user_sections_divider">Credenciales de inicio de sesión</string>
+    <string name="hint_create_user_nickname">Introduzca el nickname…</string>
+    <string name="hint_create_user_password">Introduzca la contraseña…</string>
     <string name="hint_login_nickname">Nickname…</string>
     <string name="hint_login_password">Contraseña…</string>
-    <string name="esp">ESP</string>
-    <string name="ita">ITA</string>
     <string name="back">Volver</string>
     <string name="no_user">Usuario</string>
     <string name="no_id">ID</string>
@@ -33,6 +32,5 @@
     <string name="id_not_entered">Introduce un ID de usuario para iniciar sesión</string>
     <string name="id_not_valid">No existe un usurario con ID:\u0020</string>
     <string name="connection_error">Error al conectar con el servidor, vuelva a intentarlo</string>
-    <string name="not_installed_app">Error: applicacion no instalada</string>
     <string name="date">EEEE, dd - MMMM - yyyy</string>
 </resources>
