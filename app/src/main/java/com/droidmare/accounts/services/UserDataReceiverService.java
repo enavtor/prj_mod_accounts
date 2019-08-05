@@ -92,7 +92,7 @@ public class UserDataReceiverService extends IntentService {
 
         SharedPreferences sharedPref = context.getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
 
-        userJsonString = sharedPref.getString(USER_DATA_PREF, "");
+        userJsonString = sharedPref.getString(USER_PREF_KEY, "");
 
         setUserAttributes();
     }

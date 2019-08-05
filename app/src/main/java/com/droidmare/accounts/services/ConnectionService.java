@@ -27,8 +27,8 @@ public class ConnectionService extends IntentService {
     private static final String TAG = ConnectionService.class.getCanonicalName();
 
     //API base URL:
-    public static final String BASE_URL = "http://192.168.1.49:3000/user/";
-    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
+    //public static final String BASE_URL = "http://192.168.1.49:3000/user/";
+    public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
 
     //API request operations:
     public static final String CREATE = "POST";
