@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,12 +18,10 @@ import android.widget.TextView;
 
 import com.droidmare.accounts.R;
 import com.droidmare.accounts.services.ConnectionService;
+import com.droidmare.accounts.services.UserDataService;
 import com.droidmare.accounts.utils.ImageUtils;
 import com.droidmare.accounts.utils.ToastUtils;
 import com.droidmare.accounts.services.DateCheckerService;
-import com.droidmare.accounts.services.UserDataReceiverService;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,36 +62,12 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout acceptButton;
     private LinearLayout cancelButton;
 
-    //FilesActivity attributes
-    private boolean justCreated;
-
-    private Handler onPauseHandler;
-
-    private Runnable onPauseRunnable;
-
-    private StatisticService statistic;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final String canonicalName = getClass().getCanonicalName();
-
-        onPauseHandler = new Handler();
-        onPauseRunnable = new Runnable() {
-            @Override
-            public void run() {
-                statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_PAUSE, canonicalName);
-            }
-        };
-
-        justCreated = true;
-
         //The soft keyboard is hidden in order to avoid it being displayed when the module is launched:
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_main);
 
@@ -114,39 +87,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!justCreated)
-            statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_RESUME, getClass().getCanonicalName());
-
-        else justCreated = false;
-
-        setUserInformation();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        onPauseHandler.postDelayed(onPauseRunnable, 500);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        onPauseHandler.removeCallbacks(onPauseRunnable);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         switch (keyCode) {
 
             case KeyEvent.KEYCODE_PROG_GREEN:
-                if (!loginNicknameTextBox.getText().toString().equals("")) login();
+                if (!loginNicknameTextBox.getText().toString().equals("")) login(null, null);
                 else
-                    ToastUtils.makeDefaultCustomToast(getApplicationContext(), getString(R.string.id_not_entered));
+                    ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.id_not_entered));
                 break;
 
             case KeyEvent.KEYCODE_PROG_YELLOW:
@@ -212,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                login(null, null);
             }
         });
 
@@ -259,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_green).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!loginNicknameTextBox.getText().toString().equals("")) login();
-                else ToastUtils.makeDefaultCustomToast(getApplicationContext(), getResources().getString(R.string.id_not_entered));
+                if (!loginNicknameTextBox.getText().toString().equals("")) login(null, null);
+                else ToastUtils.makeCustomToast(getApplicationContext(), getResources().getString(R.string.id_not_entered));
             }
         });
 
@@ -289,11 +237,11 @@ public class MainActivity extends AppCompatActivity {
         JSONObject userJson = new JSONObject();
 
         try {
-            userJson.put(UserDataReceiverService.USER_NAME_FIELD, newUserNameTextBox.getText().toString());
-            userJson.put(UserDataReceiverService.USER_SURNAME_FIELD, newUserSurnameTextBox.getText().toString());
-            userJson.put(UserDataReceiverService.USER_AVATAR_FIELD, newUserEncodedAvatar);
-            userJson.put(UserDataReceiverService.USER_NICKNAME_FIELD, newUserNicknameTextBox.getText().toString());
-            userJson.put(UserDataReceiverService.USER_PASSWORD_FIELD, newUserPasswordTextBox.getText().toString());
+            userJson.put(UserDataService.USER_NAME_FIELD, newUserNameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_SURNAME_FIELD, newUserSurnameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_AVATAR_FIELD, newUserEncodedAvatar);
+            userJson.put(UserDataService.USER_NICKNAME_FIELD, newUserNicknameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_PASSWORD_FIELD, newUserPasswordTextBox.getText().toString());
 
         } catch (JSONException jsonException) {
             Log.e(TAG, "createUser. JSONException: " + jsonException.getMessage());
@@ -301,24 +249,29 @@ public class MainActivity extends AppCompatActivity {
 
         Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
 
-        createIntent.putExtra("requestedOperation", ConnectionService.CREATE);
-        createIntent.putExtra("userJsonString", userJson.toString());
+        createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
+        createIntent.putExtra(UserDataService.USER_JSON_FIELD, userJson.toString());
 
         startService(createIntent);
     }
 
-    private void login() {
+    public void login(String userNick, String userPass) {
+
+        if (createUserLayoutContainer.getVisibility() == View.VISIBLE)
+            cancelButton.performClick();
 
         findViewById(R.id.layout_loading).setVisibility(View.VISIBLE);
 
-        String userNick = loginNicknameTextBox.getText().toString();
-        String userPass = loginPasswordTextBox.getText().toString();
+        if (userNick == null) {
+            userNick = loginNicknameTextBox.getText().toString();
+            userPass = loginPasswordTextBox.getText().toString();
+        }
 
         Intent loginIntent = new Intent(getApplicationContext(), ConnectionService.class);
 
-        loginIntent.putExtra("requestedOperation", ConnectionService.LOGIN);
-        loginIntent.putExtra(UserDataReceiverService.USER_NICKNAME_FIELD, userNick);
-        loginIntent.putExtra(UserDataReceiverService.USER_PASSWORD_FIELD, userPass);
+        loginIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.LOGIN);
+        loginIntent.putExtra(UserDataService.USER_NICKNAME_FIELD, userNick);
+        loginIntent.putExtra(UserDataService.USER_PASSWORD_FIELD, userPass);
 
         startService(loginIntent);
     }
@@ -356,9 +309,9 @@ public class MainActivity extends AppCompatActivity {
     //Method that configures the user information view:
     public void setUserInformation() {
 
-        UserDataReceiverService.readSharedPrefs(getApplicationContext());
+        UserDataService.readSharedPrefs(getApplicationContext());
 
-        if (UserDataReceiverService.getUserId() != null) {
+        if (UserDataService.getUserId() != null) {
 
             final ImageView avatar = findViewById(R.id.user_photo);
             final TextView name = findViewById(R.id.user_name);
@@ -367,9 +320,9 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    avatar.setImageBitmap(UserDataReceiverService.getDecodedAvatar());
-                    name.setText(UserDataReceiverService.getUserName());
-                    id.setText(UserDataReceiverService.getUserNickname());
+                    avatar.setImageBitmap(UserDataService.getDecodedAvatar());
+                    name.setText(UserDataService.getUserName());
+                    id.setText(UserDataService.getUserNickname());
                 }
             });
         }

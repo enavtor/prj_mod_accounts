@@ -32,13 +32,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".views.activities.DialogActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".services.ConnectionService"/>
 
         <service android:name=".services.DataDeleterService"/>
 
         <service android:name=".services.DateCheckerService"/>
 
-        <service android:name=".services.UserDataReceiverService"/>
+        <service android:name=".services.UserDataService"/>
 
     </application>
 </manifest>

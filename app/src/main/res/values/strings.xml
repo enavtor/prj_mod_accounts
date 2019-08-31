@@ -27,6 +27,13 @@
     <string name="loading_layout_title">Logging into server</string>
     <string name="loading_layout_stand_by">Please stand by…</string>
 
+    <string name="dialog_affirmative">Yes</string>
+    <string name="dialog_negative">No</string>
+
+    <string name="logout_button">Logout</string>
+    <string name="edit_user_button">Edit user</string>
+    <string name="delete_user_button">Delete user</string>
+
     <!--\u0020 means a white space-->
     <string name="welcome_message_head">Hello\u0020</string>
     <string name="welcome_message_tail">, we welcome you</string>

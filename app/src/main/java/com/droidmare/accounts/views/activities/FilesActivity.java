@@ -26,7 +26,7 @@ import java.util.ArrayList;
 //@author Eduardo on 12/06/2019.
 public class FilesActivity extends Activity {
 
-    public static final String ROOT_PATH = "storage/emulated/0/";
+    public static final String ROOT_PATH = "storage/external_storage/sdcard1";
 
     private static final String HISTORY_SEPARATOR = "<===>";
 
@@ -217,6 +217,8 @@ public class FilesActivity extends Activity {
 
         Bitmap avatarBitmap = BitmapFactory.decodeFile(avatar.getPath());
         String encodedAvatar = ImageUtils.encodeBitmapImage(avatarBitmap);
+
+        Log.d("API_TEST", "Length: " + encodedAvatar.length());
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("encodedAvatar", encodedAvatar);

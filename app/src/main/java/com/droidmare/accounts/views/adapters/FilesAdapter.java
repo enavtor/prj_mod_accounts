@@ -67,7 +67,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
         }
 
         else {
-            if (item.getBitmapIcon() == null) new ThumbnailTask(position, holder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void) null);
+            if (item.getBitmapIcon() == null) new ThumbnailTask(position, holder).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (Void) null);
 
             else holder.image.setImageBitmap(item.getBitmapIcon());
         }

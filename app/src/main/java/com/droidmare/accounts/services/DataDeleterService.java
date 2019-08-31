@@ -1,7 +1,7 @@
 package com.droidmare.accounts.services;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
+import android.content.ComponentName;
 import android.content.Intent;
 
 //App's data deleter service declaration
@@ -14,8 +14,12 @@ public class DataDeleterService extends IntentService {
     }
 
     @Override
-    public void onHandleIntent(Intent eventIntent) {
+    public void onHandleIntent(Intent intent) {
 
-        ((ActivityManager)getApplicationContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+        intent.setComponent(new ComponentName(ConnectionService.CALENDAR_MODULE_PACKAGE, ConnectionService.CALENDAR_MODULE_PACKAGE + "services.DataDeleterService"));
+
+        startService(intent);
+
+        UserDataService.infoSet = false;
     }
 }

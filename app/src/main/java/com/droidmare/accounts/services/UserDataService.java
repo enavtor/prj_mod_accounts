@@ -12,15 +12,13 @@ import com.droidmare.accounts.utils.ImageUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
-public class UserDataReceiverService extends IntentService {
+public class UserDataService extends IntentService {
 
-    private static final String TAG = UserDataReceiverService.class.getCanonicalName();
+    private static final String TAG = UserDataService.class.getCanonicalName();
+
+    public static final String USER_JSON_FIELD = "userJsonString";
 
     private static final String USER_DATA_PREF = "userDataPrefFile";
 
@@ -44,14 +42,14 @@ public class UserDataReceiverService extends IntentService {
 
     public static boolean infoSet = false;
 
-    public UserDataReceiverService() { super(TAG); }
+    public UserDataService() { super(TAG); }
 
     @Override
     public void onHandleIntent(Intent dataIntent) {
 
         Log.d(TAG, "onHandleIntent");
 
-        userJsonString = dataIntent.getStringExtra("userJsonString");
+        userJsonString = dataIntent.getStringExtra(USER_JSON_FIELD);
 
         writeSharedPrefs();
         setUserAttributes();
@@ -97,7 +95,7 @@ public class UserDataReceiverService extends IntentService {
         setUserAttributes();
     }
 
-       //Method that returns the user id:
+    //Method that returns the user id:
     public static String getUserId() { return userId; }
 
     //Method that returns the user name:

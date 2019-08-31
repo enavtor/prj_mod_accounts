@@ -26,6 +26,13 @@
     <string name="loading_layout_title">Iniciando sesión</string>
     <string name="loading_layout_stand_by">Espere por favor…</string>
 
+    <string name="dialog_affirmative">Si</string>
+    <string name="dialog_negative">No</string>
+
+    <string name="logout_button">Cerrar sesión</string>
+    <string name="edit_user_button">Editar usuario</string>
+    <string name="delete_user_button">Eliminar usario</string>
+
     <!--\u0020 means a white space-->
     <string name="welcome_message_head">Hola\u0020</string>
     <string name="welcome_message_tail">, te damos la bienvenida</string>

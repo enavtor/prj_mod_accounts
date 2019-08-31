@@ -3,6 +3,7 @@ package com.droidmare.accounts.services;
 import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import com.droidmare.accounts.R;
@@ -27,8 +28,11 @@ public class ConnectionService extends IntentService {
     private static final String TAG = ConnectionService.class.getCanonicalName();
 
     //API base URL:
-    //public static final String BASE_URL = "http://192.168.1.49:3000/user/";
-    public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
+    public static final String BASE_URL = "http://192.168.1.49:3000/user/";
+    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
+
+    //Intent fields:
+    public static final String REQUESTED_OPERATION_FIELD = "requestedOperation";
 
     //API request operations:
     public static final String CREATE = "POST";
@@ -43,7 +47,7 @@ public class ConnectionService extends IntentService {
 
     //Modules packages names and api url receiver classes:
     private static final String ACCOUNTS_MODULE_PACKAGE = "com.droidmare.accounts";
-    private static final String CALENDAR_MODULE_PACKAGE = "com.droidmare.calendar";
+    public static final String CALENDAR_MODULE_PACKAGE = "com.droidmare.calendar";
 
     //String array with all the modules packages names:
     private static final String[] modulesPackages = {
@@ -52,7 +56,7 @@ public class ConnectionService extends IntentService {
     };
 
     //User data receiver package:
-    private static final String USER_RECEIVER_PACKAGE = ".services.UserDataReceiverService";
+    private static final String USER_RECEIVER_PACKAGE = ".services.UserDataService";
 
     //User nickname and password (used when a login operation is performed)
     private String userNick;
@@ -82,17 +86,24 @@ public class ConnectionService extends IntentService {
 
         userNick = userPass = null;
 
-        String requestedOperation = intent.getStringExtra("requestedOperation");
+        String requestedOperation = intent.getStringExtra(REQUESTED_OPERATION_FIELD);
 
         requestedLogin = requestedOperation.equals(LOGIN);
 
         if (requestedLogin) {
-            userNick = intent.getStringExtra(UserDataReceiverService.USER_NICKNAME_FIELD);
-            userPass = intent.getStringExtra(UserDataReceiverService.USER_PASSWORD_FIELD);
+            userNick = intent.getStringExtra(UserDataService.USER_NICKNAME_FIELD);
+            userPass = intent.getStringExtra(UserDataService.USER_PASSWORD_FIELD);
         }
 
         else {
-            userJsonString = intent.getStringExtra("userJsonString");
+            userJsonString = intent.getStringExtra(UserDataService.USER_JSON_FIELD);
+            try {
+                JSONObject userJson = new JSONObject(userJsonString);
+                userNick = userJson.getString(UserDataService.USER_NICKNAME_FIELD);
+                userPass = userJson.getString(UserDataService.USER_PASSWORD_FIELD);
+            } catch (JSONException jsonException) {
+                Log.e(TAG, "onHandleIntent(103). JSONException: " + jsonException.getMessage());
+            }
         }
 
         connectAndRetrieve(requestedOperation, userNick, userPass);
@@ -102,9 +113,16 @@ public class ConnectionService extends IntentService {
         else if (requestedOperation.equals(CREATE)) {
             try {
                 String message = new JSONObject(userJsonString).getString("message");
-                ToastUtils.makeDefaultCustomToast(getApplicationContext(), message);
+                ToastUtils.makeCustomToast(getApplicationContext(), message);
+                startService(new Intent(getApplicationContext(), DataDeleterService.class));
+                new Handler(getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isMainActivityInstantiated()) mainActivityReference.get().login(userNick, userPass);
+                    }
+                }, 3000);
             } catch (JSONException jsonException) {
-                Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
+                Log.e(TAG, "onHandleIntent(122). JSONException: " + jsonException.getMessage());
             }
         }
     }
@@ -168,24 +186,24 @@ public class ConnectionService extends IntentService {
             case 300:
                 hideLoadingScreen();
                 String invalidIdMessage = getResources().getString(R.string.id_not_valid) + userNick + " / " + userPass;
-                ToastUtils.makeDefaultCustomToast(getApplicationContext(), invalidIdMessage);
+                ToastUtils.makeCustomToast(getApplicationContext(), invalidIdMessage);
                 break;
 
             default:
                 hideLoadingScreen();
                 String connectionError = getResources().getString(R.string.connection_error);
-                ToastUtils.makeDefaultCustomToast(getApplicationContext(), connectionError);
+                ToastUtils.makeCustomToast(getApplicationContext(), connectionError);
         }
     }
 
-    //Method that sends the user json to all the modules that need it (specifically this method launches the UserDataReceiverService of each module):
+    //Method that sends the user json to all the modules that need it (specifically this method launches the UserDataService of each module):
     private void sendUserData() {
 
         try {
             JSONObject userJson = new JSONObject(userJsonString);
 
-            String name = userJson.getString(UserDataReceiverService.USER_NAME_FIELD);
-            String surname = userJson.getString(UserDataReceiverService.USER_SURNAME_FIELD);
+            String name = userJson.getString(UserDataService.USER_NAME_FIELD);
+            String surname = userJson.getString(UserDataService.USER_SURNAME_FIELD);
 
             String user = name + " " + surname;
 
@@ -197,14 +215,14 @@ public class ConnectionService extends IntentService {
 
                 launcher.setComponent(new ComponentName(modulePackage, modulePackage + USER_RECEIVER_PACKAGE));
 
-                launcher.putExtra("userJsonString", userJsonString);
+                launcher.putExtra(UserDataService.USER_JSON_FIELD, userJsonString);
 
                 startService(launcher);
             }
 
-            //The execution thread is going to be paused to let the UserDataReceiverService
+            //The execution thread is going to be paused to let the UserDataService
             //set the user info before it is displayed on the main activity user info view:
-            while (!UserDataReceiverService.infoSet) {
+            while (!UserDataService.infoSet) {
                 Log.d("PAUSEDTHREAD", "Paused");
                 pauseServiceThread(50);
             }
@@ -218,11 +236,11 @@ public class ConnectionService extends IntentService {
 
             hideLoadingScreen();
 
-            ToastUtils.makeDefaultCustomToast(getApplicationContext(), welcomeMessage);
+            ToastUtils.makeCustomToast(getApplicationContext(), welcomeMessage);
 
         } catch (JSONException jsonException) {
             Log.e(TAG, "sendUserData(). JSONException: " + jsonException.getMessage());
-            ToastUtils.makeDefaultCustomToast(getApplicationContext(), userJsonString);
+            ToastUtils.makeCustomToast(getApplicationContext(), userJsonString);
             hideLoadingScreen();
         }
     }

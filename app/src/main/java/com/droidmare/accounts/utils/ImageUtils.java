@@ -1,8 +1,12 @@
 package com.droidmare.accounts.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
+import android.util.TypedValue;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,6 +28,8 @@ public class ImageUtils {
         int bitmapWidth = bitmapImage.getWidth();
         int bitmapHeight = bitmapImage.getHeight();
 
+        Log.d("API_TEST", "Size: " + bitmapWidth + "x" + bitmapHeight);
+
         if (bitmapWidth > scaledWidth) {
             mustBeScaled = true;
             scaledHeight = scaledWidth * bitmapHeight / bitmapWidth;
@@ -44,6 +50,8 @@ public class ImageUtils {
 
         if (mustBeScaled) scaledBitmap = Bitmap.createScaledBitmap(bitmapImage, scaledWidth, scaledHeight, false);
 
+        Log.d("API_TEST", "Compressed size: " + scaledBitmap.getWidth() + "x" + scaledBitmap.getHeight());
+
         return scaledBitmap;
     }
 
@@ -55,7 +63,9 @@ public class ImageUtils {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Log.d("API_TEST", "Density: " + bitmap.getByteCount());
+
+        bitmap.compress(Bitmap.CompressFormat.WEBP, 80, byteArrayOutputStream);
 
         byte[] bitmapByteArray = byteArrayOutputStream.toByteArray();
 
@@ -67,5 +77,11 @@ public class ImageUtils {
         byte[] encodedBitmapByteArray = Base64.decode(encodedString, Base64.DEFAULT);
 
         return BitmapFactory.decodeByteArray(encodedBitmapByteArray, 0, encodedBitmapByteArray.length);
+    }
+
+    //Method that transforms a dp value into pixels:
+    static int transformDipToPix (Context context, int dpValue) {
+        Resources r = context.getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
     }
 }
