@@ -4,6 +4,10 @@ import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Intent;
 
+import com.droidmare.accounts.views.activities.MainActivity;
+
+import java.lang.ref.WeakReference;
+
 //App's data deleter service declaration
 //@author Eduardo on 24/05/2018.
 
@@ -16,7 +20,7 @@ public class DataDeleterService extends IntentService {
     @Override
     public void onHandleIntent(Intent intent) {
 
-        intent.setComponent(new ComponentName(ConnectionService.CALENDAR_MODULE_PACKAGE, ConnectionService.CALENDAR_MODULE_PACKAGE + "services.DataDeleterService"));
+        intent.setComponent(new ComponentName(ConnectionService.CALENDAR_MODULE_PACKAGE, ConnectionService.CALENDAR_MODULE_PACKAGE + ".services.DataDeleterService"));
 
         startService(intent);
 

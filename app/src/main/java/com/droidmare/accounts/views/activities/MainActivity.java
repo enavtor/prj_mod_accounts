@@ -3,6 +3,8 @@ package com.droidmare.accounts.views.activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.droidmare.accounts.R;
 import com.droidmare.accounts.services.ConnectionService;
+import com.droidmare.accounts.services.DataDeleterService;
 import com.droidmare.accounts.services.UserDataService;
 import com.droidmare.accounts.utils.ImageUtils;
 import com.droidmare.accounts.utils.ToastUtils;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Layouts containers:
     private RelativeLayout loginLayoutContainer;
+    private RelativeLayout userLoggedLayoutContainer;
     private RelativeLayout createUserLayoutContainer;
 
     //Login layout elements:
@@ -47,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
     private LinearLayout loginButton;
     private LinearLayout createNewUserButton;
+
+    //Login layout elements:
+    private RelativeLayout loggedUserAvatar;
+    private TextView loggedUserName;
+    private TextView loggedUserNickname;
+
+    private LinearLayout logoutButton;
+    private LinearLayout editUserButton;
+    private LinearLayout deleteUserButton;
 
     //Create new user layout elements:
     private String newUserEncodedAvatar;
@@ -62,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout acceptButton;
     private LinearLayout cancelButton;
 
+    //Control variables:
+    private boolean userLogged;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         DateCheckerService.setMainActivityReference(this);
         ConnectionService.setMainActivityReference(this);
+        UserDataService.setMainActivityReference(this);
 
         if (!DateCheckerService.isInstantiated)
             startService(new Intent(getApplicationContext(), DateCheckerService.class));
@@ -83,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         setButtonsBehaviour();
 
         setUserInformation();
+
         setVersionNumber();
     }
 
@@ -124,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Layouts views container:
         loginLayoutContainer = findViewById(R.id.login_layout);
+        userLoggedLayoutContainer = findViewById(R.id.user_logged_layout);
         createUserLayoutContainer = findViewById(R.id.create_user_layout);
 
         //Login layout views:
@@ -132,6 +151,15 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton = findViewById(R.id.login_affirmative_button);
         createNewUserButton = findViewById(R.id.login_create_user_button);
+
+        //Logged layout views:
+        loggedUserAvatar = findViewById(R.id.user_avatar_box);
+        loggedUserName = findViewById(R.id.logged_user_name);
+        loggedUserNickname = findViewById(R.id.logged_user_nick);
+
+        logoutButton = findViewById(R.id.logout_button);
+        editUserButton = findViewById(R.id.edit_user_button);
+        deleteUserButton = findViewById(R.id.delete_user_button);
 
         //Create user layout views:
         newUserEncodedAvatar = "";
@@ -160,14 +188,37 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login(null, null);
+                if (!loginNicknameTextBox.getText().toString().equals("")) login(null, null);
+                else ToastUtils.makeCustomToast(getApplicationContext(), getResources().getString(R.string.id_not_entered));
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
+        editUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUser();
+            }
+        });
+
+        deleteUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUser();
             }
         });
 
         createNewUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginLayoutContainer.setVisibility(View.GONE);
+                if (userLogged) userLoggedLayoutContainer.setVisibility(View.GONE);
+                else loginLayoutContainer.setVisibility(View.GONE);
                 createUserLayoutContainer.setVisibility(View.VISIBLE);
                 createUserLayoutContainer.requestFocus();
             }
@@ -191,7 +242,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createUserLayoutContainer.setVisibility(View.GONE);
-                loginLayoutContainer.setVisibility(View.VISIBLE);
+                if (userLogged) userLoggedLayoutContainer.setVisibility(View.VISIBLE);
+                else loginLayoutContainer.setVisibility(View.VISIBLE);
                 loginLayoutContainer.requestFocus();
             }
         });
@@ -207,8 +259,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_green).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!loginNicknameTextBox.getText().toString().equals("")) login(null, null);
-                else ToastUtils.makeCustomToast(getApplicationContext(), getResources().getString(R.string.id_not_entered));
+                loginButton.performClick();
             }
         });
 
@@ -274,6 +325,51 @@ public class MainActivity extends AppCompatActivity {
         loginIntent.putExtra(UserDataService.USER_PASSWORD_FIELD, userPass);
 
         startService(loginIntent);
+
+        loginNicknameTextBox.setText("");
+        loginPasswordTextBox.setText("");
+    }
+
+    public void logout() {
+
+        userLogged = false;
+
+        startService(new Intent(getApplicationContext(), UserDataService.class));
+
+        startService(new Intent(getApplicationContext(), DataDeleterService.class));
+    }
+
+    public void editUser() {
+
+        JSONObject userJson = new JSONObject();
+
+        try {
+            userJson.put(UserDataService.USER_NAME_FIELD, newUserNameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_SURNAME_FIELD, newUserSurnameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_AVATAR_FIELD, newUserEncodedAvatar);
+            userJson.put(UserDataService.USER_NICKNAME_FIELD, newUserNicknameTextBox.getText().toString());
+            userJson.put(UserDataService.USER_PASSWORD_FIELD, newUserPasswordTextBox.getText().toString());
+
+        } catch (JSONException jsonException) {
+            Log.e(TAG, "createUser. JSONException: " + jsonException.getMessage());
+        }
+
+        Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
+
+        createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
+        createIntent.putExtra(UserDataService.USER_JSON_FIELD, userJson.toString());
+
+        startService(createIntent);
+    }
+
+    public void deleteUser() {
+
+        Intent loginIntent = new Intent(getApplicationContext(), ConnectionService.class);
+
+        loginIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.DELETE);
+        loginIntent.putExtra(UserDataService.USER_JSON_FIELD, "{ \"_id\": \"" + UserDataService.getUserId() + "\"}");
+
+        startService(loginIntent);
     }
 
     public void hideLoadingScreen() {
@@ -311,18 +407,49 @@ public class MainActivity extends AppCompatActivity {
 
         UserDataService.readSharedPrefs(getApplicationContext());
 
-        if (UserDataService.getUserId() != null) {
+        userLogged = UserDataService.getUserId() != null;
 
-            final ImageView avatar = findViewById(R.id.user_photo);
-            final TextView name = findViewById(R.id.user_name);
-            final TextView id = findViewById(R.id.user_id);
+        final ImageView avatar = findViewById(R.id.user_photo);
+        final TextView name = findViewById(R.id.user_name);
+        final TextView id = findViewById(R.id.user_id);
+
+        if (userLogged) {
+
+            final Bitmap userAvatar = UserDataService.getDecodedAvatar();
+            final String userName = UserDataService.getUserName();
+            final String userNickname = UserDataService.getUserNickname();
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    avatar.setImageBitmap(UserDataService.getDecodedAvatar());
-                    name.setText(UserDataService.getUserName());
-                    id.setText(UserDataService.getUserNickname());
+                    userLoggedLayoutContainer.setVisibility(View.VISIBLE);
+                    loginLayoutContainer.setVisibility(View.INVISIBLE);
+
+                    avatar.setImageBitmap(userAvatar);
+                    loggedUserAvatar.setBackground(new BitmapDrawable(getResources(), userAvatar));
+
+                    name.setText(userName);
+                    loggedUserName.setText(userName);
+
+                    id.setText(userNickname);
+                    loggedUserNickname.setText(userNickname);
+                }
+            });
+        }
+
+        else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    userLoggedLayoutContainer.setVisibility(View.INVISIBLE);
+                    loginLayoutContainer.setVisibility(View.VISIBLE);
+
+                    loginNicknameTextBox.requestFocus();
+
+                    avatar.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.photo));
+                    name.setText(getString(R.string.no_user));
+                    id.setText(getString(R.string.no_id));
                 }
             });
         }

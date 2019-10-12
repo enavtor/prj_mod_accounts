@@ -99,8 +99,10 @@ public class ConnectionService extends IntentService {
             userJsonString = intent.getStringExtra(UserDataService.USER_JSON_FIELD);
             try {
                 JSONObject userJson = new JSONObject(userJsonString);
-                userNick = userJson.getString(UserDataService.USER_NICKNAME_FIELD);
-                userPass = userJson.getString(UserDataService.USER_PASSWORD_FIELD);
+                if (userJson.has(UserDataService.USER_NICKNAME_FIELD)) {
+                    userNick = userJson.getString(UserDataService.USER_NICKNAME_FIELD);
+                    userPass = userJson.getString(UserDataService.USER_PASSWORD_FIELD);
+                }
             } catch (JSONException jsonException) {
                 Log.e(TAG, "onHandleIntent(103). JSONException: " + jsonException.getMessage());
             }
@@ -120,9 +122,27 @@ public class ConnectionService extends IntentService {
                     public void run() {
                         if (isMainActivityInstantiated()) mainActivityReference.get().login(userNick, userPass);
                     }
-                }, 3000);
+                }, 5000);
             } catch (JSONException jsonException) {
                 Log.e(TAG, "onHandleIntent(122). JSONException: " + jsonException.getMessage());
+            }
+        }
+
+        else if (requestedOperation.equals(DELETE)) {
+
+            if (responseCode == 200) {
+                try {
+                    String message = new JSONObject(userJsonString).getString("message");
+                    ToastUtils.makeCustomToast(getApplicationContext(), message);
+                    startService(new Intent(getApplicationContext(), DataDeleterService.class));
+                    if (isMainActivityInstantiated()) mainActivityReference.get().logout();
+                } catch (JSONException jsonException) {
+                    Log.e(TAG, "onHandleIntent(122). JSONException: " + jsonException.getMessage());
+                }
+            }
+
+            else {
+                ToastUtils.makeCustomToast(getApplicationContext(), "User not deleted due to a connection error");
             }
         }
     }

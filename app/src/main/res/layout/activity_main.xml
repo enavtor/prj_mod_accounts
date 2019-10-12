@@ -36,10 +36,27 @@
             android:layout_above="@+id/footer"
             android:layout_below="@+id/header"
             android:paddingBottom="@dimen/footer_layout_padding"
-            android:paddingTop="@dimen/footer_layout_padding">
+            android:paddingTop="@dimen/footer_layout_padding"
+            android:visibility="gone">
 
             <include
                 layout="@layout/element_user_login"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/user_logged_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/footer"
+            android:layout_below="@+id/header"
+            android:paddingBottom="@dimen/footer_layout_padding"
+            android:paddingTop="@dimen/footer_layout_padding"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/element_user_logged"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>

@@ -8,9 +8,12 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.droidmare.accounts.utils.ImageUtils;
+import com.droidmare.accounts.views.activities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
@@ -44,17 +47,29 @@ public class UserDataService extends IntentService {
 
     public UserDataService() { super(TAG); }
 
+    private static WeakReference<MainActivity> mainActivityReference;
+    public static void setMainActivityReference(MainActivity activity) {
+        mainActivityReference = new WeakReference<>(activity);
+    }
+
     @Override
     public void onHandleIntent(Intent dataIntent) {
 
         Log.d(TAG, "onHandleIntent");
 
-        userJsonString = dataIntent.getStringExtra(USER_JSON_FIELD);
+        //If the data Intent contains the user json, that information is stored within the shared preferences:
+        if (dataIntent.hasExtra(USER_JSON_FIELD)) {
 
-        writeSharedPrefs();
-        setUserAttributes();
+            userJsonString = dataIntent.getStringExtra(USER_JSON_FIELD);
 
-        infoSet = true;
+            writeSharedPrefs();
+            setUserAttributes();
+
+            infoSet = true;
+        }
+
+        //Otherwise, the current user information is cleared:
+        else deleteSharedPreferences();
     }
 
     private void writeSharedPrefs() {
@@ -66,6 +81,23 @@ public class UserDataService extends IntentService {
         editor.putString(USER_PREF_KEY, userJsonString);
 
         editor.apply();
+    }
+
+    private void deleteSharedPreferences() {
+
+        Log.d(TAG, "deleteSharedPreferences");
+
+        SharedPreferences.Editor editor = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE).edit();
+
+        editor.clear();
+
+        editor.apply();
+
+        resetUserData();
+
+        if (mainActivityReference != null && mainActivityReference.get() != null) {
+            mainActivityReference.get().setUserInformation();
+        }
     }
 
     private static void setUserAttributes() {
@@ -109,4 +141,8 @@ public class UserDataService extends IntentService {
 
     //Method that returns the user surname:
     public static String getUserPassword() { return userPassword; }
+
+    private void resetUserData() {
+        userId = userName = userSurname = avatarString = userNickname = userPassword = null;
+    }
 }
