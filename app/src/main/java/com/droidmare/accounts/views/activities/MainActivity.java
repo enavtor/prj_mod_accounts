@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText loginPasswordTextBox;
 
     private LinearLayout loginButton;
-    private LinearLayout createNewUserButton;
+    private LinearLayout createUserButton;
 
     //Login layout elements:
     private RelativeLayout loggedUserAvatar;
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Control variables:
     private boolean userLogged;
+    private boolean editingUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         loginPasswordTextBox = findViewById(R.id.password_input_box);
 
         loginButton = findViewById(R.id.login_affirmative_button);
-        createNewUserButton = findViewById(R.id.login_create_user_button);
+        createUserButton = findViewById(R.id.login_create_user_button);
 
         //Logged layout views:
         loggedUserAvatar = findViewById(R.id.user_avatar_box);
@@ -203,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
         editUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editUser();
+                editingUser = true;
+                showCreateEditUserLayout();
             }
         });
 
@@ -214,13 +216,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        createNewUserButton.setOnClickListener(new View.OnClickListener() {
+        createUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userLogged) userLoggedLayoutContainer.setVisibility(View.GONE);
-                else loginLayoutContainer.setVisibility(View.GONE);
-                createUserLayoutContainer.setVisibility(View.VISIBLE);
-                createUserLayoutContainer.requestFocus();
+                editingUser = false;
+                showCreateEditUserLayout();
             }
         });
 
@@ -234,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUser();
+                if (editingUser) editUser();
+                else createUser();
             }
         });
 
@@ -283,29 +284,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(statusIntent);
     }
 
-    private void createUser() {
-
-        JSONObject userJson = new JSONObject();
-
-        try {
-            userJson.put(UserDataService.USER_NAME_FIELD, newUserNameTextBox.getText().toString());
-            userJson.put(UserDataService.USER_SURNAME_FIELD, newUserSurnameTextBox.getText().toString());
-            userJson.put(UserDataService.USER_AVATAR_FIELD, newUserEncodedAvatar);
-            userJson.put(UserDataService.USER_NICKNAME_FIELD, newUserNicknameTextBox.getText().toString());
-            userJson.put(UserDataService.USER_PASSWORD_FIELD, newUserPasswordTextBox.getText().toString());
-
-        } catch (JSONException jsonException) {
-            Log.e(TAG, "createUser. JSONException: " + jsonException.getMessage());
-        }
-
-        Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
-
-        createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
-        createIntent.putExtra(UserDataService.USER_JSON_FIELD, userJson.toString());
-
-        startService(createIntent);
-    }
-
     public void login(String userNick, String userPass) {
 
         if (createUserLayoutContainer.getVisibility() == View.VISIBLE)
@@ -339,11 +317,53 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(getApplicationContext(), DataDeleterService.class));
     }
 
-    public void editUser() {
+    private void showCreateEditUserLayout() {
+        if (userLogged) userLoggedLayoutContainer.setVisibility(View.GONE);
+        else loginLayoutContainer.setVisibility(View.GONE);
 
+        createUserLayoutContainer.setVisibility(View.VISIBLE);
+        createUserLayoutContainer.requestFocus();
+
+        if (editingUser) {
+            newUserNameTextBox.setText(UserDataService.getUserName());
+            newUserSurnameTextBox.setText(UserDataService.getUserSurname());
+            newUserAvatarPreviewBox.setImageDrawable(new BitmapDrawable(getResources(), UserDataService.getDecodedAvatar()));
+            newUserNicknameTextBox.setText(UserDataService.getUserNickname());
+            newUserPasswordTextBox.setText(UserDataService.getUserPassword());
+        }
+    }
+
+    public void createUser() {
+
+        Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
+
+        createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
+        createIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson().toString());
+
+        startService(createIntent);
+    }
+
+    public void editUser() {
+        Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
+
+        JSONObject userAttributesJson = getUserAttributesJson();
+
+        if (checkNewAttributes(userAttributesJson)) {
+
+            createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.EDIT);
+            createIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson().toString());
+
+            startService(createIntent);
+        }
+
+        else ToastUtils.makeCustomToast(getApplicationContext(), "The user info was not modified!!!");
+    }
+
+    private JSONObject getUserAttributesJson() {
         JSONObject userJson = new JSONObject();
 
         try {
+            if (editingUser) userJson.put(UserDataService.USER_ID_FIELD, UserDataService.getUserId());
             userJson.put(UserDataService.USER_NAME_FIELD, newUserNameTextBox.getText().toString());
             userJson.put(UserDataService.USER_SURNAME_FIELD, newUserSurnameTextBox.getText().toString());
             userJson.put(UserDataService.USER_AVATAR_FIELD, newUserEncodedAvatar);
@@ -351,15 +371,34 @@ public class MainActivity extends AppCompatActivity {
             userJson.put(UserDataService.USER_PASSWORD_FIELD, newUserPasswordTextBox.getText().toString());
 
         } catch (JSONException jsonException) {
-            Log.e(TAG, "createUser. JSONException: " + jsonException.getMessage());
+            Log.e(TAG, "getUserAttributesJson. JSONException: " + jsonException.getMessage());
         }
 
-        Intent createIntent = new Intent(getApplicationContext(), ConnectionService.class);
+        return userJson;
+    }
 
-        createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
-        createIntent.putExtra(UserDataService.USER_JSON_FIELD, userJson.toString());
+    private boolean checkNewAttributes(JSONObject attributesJson) {
+        try {
+            if (UserDataService.getUserName().equals(attributesJson.getString(UserDataService.USER_NAME_FIELD)))
+                return true;
 
-        startService(createIntent);
+            if (UserDataService.getUserSurname().equals(attributesJson.getString(UserDataService.USER_SURNAME_FIELD)))
+                return true;
+
+            if (UserDataService.getEncodedAvatar().equals(attributesJson.getString(UserDataService.USER_AVATAR_FIELD)))
+                return true;
+
+            if (UserDataService.getUserNickname().equals(attributesJson.getString(UserDataService.USER_NICKNAME_FIELD)))
+                return true;
+
+            if (UserDataService.getUserPassword().equals(attributesJson.getString(UserDataService.USER_PASSWORD_FIELD)))
+                return true;
+
+        } catch (JSONException jsonException) {
+            Log.e(TAG, "checkNewAttributes. JSONException: " + jsonException.getMessage());
+        }
+
+        return false;
     }
 
     public void deleteUser() {
@@ -367,7 +406,10 @@ public class MainActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(getApplicationContext(), ConnectionService.class);
 
         loginIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.DELETE);
-        loginIntent.putExtra(UserDataService.USER_JSON_FIELD, "{ \"_id\": \"" + UserDataService.getUserId() + "\"}");
+
+        String deleteUserJson = "{ \"_id\": \"" + UserDataService.getUserId() + "\"}";
+
+        loginIntent.putExtra(UserDataService.USER_JSON_FIELD, deleteUserJson);
 
         startService(loginIntent);
     }
@@ -416,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
         if (userLogged) {
 
             final Bitmap userAvatar = UserDataService.getDecodedAvatar();
-            final String userName = UserDataService.getUserName();
+            final String userName = UserDataService.getUserFullName();
             final String userNickname = UserDataService.getUserNickname();
 
             runOnUiThread(new Runnable() {

@@ -130,11 +130,20 @@ public class UserDataService extends IntentService {
     //Method that returns the user id:
     public static String getUserId() { return userId; }
 
-    //Method that returns the user name:
-    public static String getUserName() { return userName + " " + userSurname; }
+    //Method that returns the user full name:
+    public static String getUserFullName() { return userName + " " + userSurname; }
 
-    //Method that returns the user avatar decoded:
+    //Method that returns the user name:
+    public static String getUserName() { return userName; }
+
+    //Method that returns the user surname:
+    public static String getUserSurname() { return userSurname; }
+
+    //Method that returns the decoded user avatar:
     public static Bitmap getDecodedAvatar() { return ImageUtils.decodeBitmapString(avatarString); }
+
+    //Method that returns the encoded user avatar:
+    public static String getEncodedAvatar() { return avatarString; }
 
     //Method that returns the user nickname:
     public static String getUserNickname() { return userNickname; }

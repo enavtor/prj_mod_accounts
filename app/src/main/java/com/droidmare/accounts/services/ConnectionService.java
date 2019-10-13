@@ -112,39 +112,43 @@ public class ConnectionService extends IntentService {
 
         if (requestedLogin) performLogin();
 
-        else if (requestedOperation.equals(CREATE)) {
-            try {
-                String message = new JSONObject(userJsonString).getString("message");
-                ToastUtils.makeCustomToast(getApplicationContext(), message);
-                startService(new Intent(getApplicationContext(), DataDeleterService.class));
-                new Handler(getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isMainActivityInstantiated()) mainActivityReference.get().login(userNick, userPass);
-                    }
-                }, 5000);
-            } catch (JSONException jsonException) {
-                Log.e(TAG, "onHandleIntent(122). JSONException: " + jsonException.getMessage());
-            }
-        }
-
-        else if (requestedOperation.equals(DELETE)) {
-
-            if (responseCode == 200) {
+        else if (responseCode == 200) switch (requestedOperation) {
+            case CREATE:
+            case EDIT:
                 try {
-                    String message = new JSONObject(userJsonString).getString("message");
-                    ToastUtils.makeCustomToast(getApplicationContext(), message);
-                    startService(new Intent(getApplicationContext(), DataDeleterService.class));
-                    if (isMainActivityInstantiated()) mainActivityReference.get().logout();
+                    showMessageAndDeleteData();
+                    launchLogin();
                 } catch (JSONException jsonException) {
-                    Log.e(TAG, "onHandleIntent(122). JSONException: " + jsonException.getMessage());
+                    Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
-            }
-
-            else {
-                ToastUtils.makeCustomToast(getApplicationContext(), "User not deleted due to a connection error");
-            }
+                break;
+            case DELETE:
+                try {
+                    showMessageAndDeleteData();
+                    if (isMainActivityInstantiated())
+                        mainActivityReference.get().logout();
+                } catch (JSONException jsonException) {
+                    Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
+                }
         }
+
+        else ToastUtils.makeCustomToast(getApplicationContext(), "Connection error, operation could not be performed (" + requestedOperation + ")");
+    }
+
+    private void showMessageAndDeleteData() throws JSONException {
+        String message = new JSONObject(userJsonString).getString("message");
+        ToastUtils.makeCustomToast(getApplicationContext(), message);
+        startService(new Intent(getApplicationContext(), DataDeleterService.class));
+    }
+
+    private void launchLogin() {
+        new Handler(getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isMainActivityInstantiated())
+                    mainActivityReference.get().login(userNick, userPass);
+            }
+        }, 5000);
     }
 
     //Method that establishes a connection to the API and performs the required operations based on the requestedOperation param:
