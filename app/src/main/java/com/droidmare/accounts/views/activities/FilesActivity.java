@@ -26,7 +26,7 @@ import java.util.ArrayList;
 //@author Eduardo on 12/06/2019.
 public class FilesActivity extends Activity {
 
-    public static final String ROOT_PATH = "storage/external_storage/sdcard1";
+    public static final String ROOT_PATH = "storage/emulated/0";
 
     private static final String HISTORY_SEPARATOR = "<===>";
 
@@ -110,8 +110,6 @@ public class FilesActivity extends Activity {
 
         mainTitleText = ROOT_PATH;
 
-        Log.d("TESTER", "Root: " + ROOT_PATH);
-
         pathsHistory.add(ROOT_PATH + HISTORY_SEPARATOR + ROOT_PATH);
 
         virtualBackButton = findViewById(R.id.virtual_back_layout);
@@ -160,8 +158,6 @@ public class FilesActivity extends Activity {
         pathsHistory.set(currentIndex, currentFolder);
 
         pathsHistory.add(name + HISTORY_SEPARATOR + path);
-
-        Log.d("TESTER", currentFolder);
 
         setDisplayedFragment(false, path);
 
@@ -218,10 +214,8 @@ public class FilesActivity extends Activity {
         Bitmap avatarBitmap = BitmapFactory.decodeFile(avatar.getPath());
         String encodedAvatar = ImageUtils.encodeBitmapImage(avatarBitmap);
 
-        Log.d("API_TEST", "Length: " + encodedAvatar.length());
-
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("encodedAvatar", encodedAvatar);
+        resultIntent.putExtra(MainActivity.ENCODED_AVATAR_FIELD, encodedAvatar);
 
         setResult(RESULT_OK, resultIntent);
 

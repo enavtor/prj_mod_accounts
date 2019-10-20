@@ -85,7 +85,6 @@ public class FilesFragment extends Fragment {
             @Override
             public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
                 currentScrolledY += dy;
-                Log.d("SCROLLTEST", "Scrolled Y: " + currentScrolledY);
             }
         });
 
@@ -98,21 +97,13 @@ public class FilesFragment extends Fragment {
             @Override
             public void onGlobalLayout() {
 
-                Log.e("SCROLLTEST", "onGlobalLayout");
-
-                if (currentScrolledY == 0 && positionToFocus > 9) {
-                    Log.e("SCROLLTEST", "1");
+                if (currentScrolledY == 0 && positionToFocus > 9)
                     fileGrid.scrollBy(0, positionToScrollTo);
-                }
 
                 else if (currentScrolledY == positionToScrollTo || positionToFocus <= 9) {
 
-                    if (positionToFocus > 4 && positionToFocus <= 9) {
-                        Log.e("SCROLLTEST", "2");
+                    if (positionToFocus > 4 && positionToFocus <= 9)
                         fileGrid.scrollBy(0, positionToScrollTo);
-                    }
-
-                    Log.e("SCROLLTEST", "3");
 
                     RecyclerView.ViewHolder item = fileGrid.findViewHolderForAdapterPosition(positionToFocus);
                     if (item != null) item.itemView.requestFocus();
@@ -204,7 +195,7 @@ public class FilesFragment extends Fragment {
     }
 
     private void checkElementVisibility() {
-        //if the element is visible (element != null) it will be focused directly, otherwise a scroll operation will be performed:
+        //If the element is visible (element != null) it will be focused directly, otherwise a scroll operation will be performed:
         RecyclerView.ViewHolder element = fileGrid.findViewHolderForAdapterPosition(positionToFocus);
 
         if (element != null) {

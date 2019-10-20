@@ -4,15 +4,24 @@
     <string name="layout_title">Cuentas</string>
     <string name="ir_red">TV</string>
     <string name="ir_green">Iniciar sesión</string>
+    <string name="date">EEEE, dd - MMMM - yyyy</string>
     <string name="ir_yellow">Ajustes</string>
     <string name="ir_blue">Ayuda</string>
-    <string name="hint_create_user_name">Introduzca su nombre</string>
-    <string name="hint_create_user_surname">Introduzca su apellido</string>
-    <string name="create_user_sections_divider">Credenciales de inicio de sesión</string>
-    <string name="hint_create_user_nickname">Introduzca el nickname…</string>
-    <string name="hint_create_user_password">Introduzca la contraseña…</string>
+
+    <string name="title_user_params_name">Nombre del usuario:</string>
+    <string name="title_user_params_surname">Apellido del usuario:</string>
+    <string name="title_user_params_nickname">Nickname de usuario:</string>
+    <string name="title_user_params_password">Comntraseña de usuario:</string>
+
+    <string name="hint_user_params_name">Introduzca su nombre</string>
+    <string name="hint_user_params_surname">Introduzca su apellido</string>
+    <string name="user_params_sections_divider">Credenciales de inicio de sesión</string>
+    <string name="hint_user_params_nickname">Introduzca el nickname…</string>
+    <string name="hint_user_params_password">Introduzca la contraseña…</string>
+
     <string name="hint_login_nickname">Nickname…</string>
     <string name="hint_login_password">Contraseña…</string>
+
     <string name="back">Volver</string>
     <string name="no_user">Usuario</string>
     <string name="no_id">ID</string>
@@ -20,7 +29,8 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="create_new_user_button">Crear nuevo usuario</string>
 
-    <string name="accept_button">Crear usuario</string>
+    <string name="accept_create_user_button">Crear usuario</string>
+    <string name="accept_edit_user_button">Editar usuario</string>
     <string name="cancel_button">Cancelar</string>
 
     <string name="loading_layout_title">Iniciando sesión</string>
@@ -36,8 +46,16 @@
     <!--\u0020 means a white space-->
     <string name="welcome_message_head">Hola\u0020</string>
     <string name="welcome_message_tail">, te damos la bienvenida</string>
-    <string name="id_not_entered">Introduce un ID de usuario para iniciar sesión</string>
-    <string name="id_not_valid">No existe un usurario con ID:\u0020</string>
+
+    <string name="id_not_entered">Introduce un ID y un Password de usuario para iniciar sesión</string>
+
     <string name="connection_error">Error al conectar con el servidor, vuelva a intentarlo</string>
-    <string name="date">EEEE, dd - MMMM - yyyy</string>
+
+    <string name="id_not_valid">No existe un usurario con id / password:\u0020</string>
+
+    <string name="no_data_edited">"No se ha modificado la información del usuario!!!"</string>
+
+    <string name="dialog_perform_logout">"¿Realmente desea cerrar sesión? (Podrá volver a iniciar sesión con su usuario actual en cualquier momento)"</string>
+    <string name="dialog_edit_user">"¿Realmente desea editar la información de su usuario? (Debería apuntar el nickname y la contraseña si estos han sido modificados)"</string>
+    <string name="dialog_delete_user">"¿Realmente desea eleminar completamente su usuario? (Siempre podrá crear uno nuevo, pero toda la información del actual se perderá para siempre)"</string>
 </resources>

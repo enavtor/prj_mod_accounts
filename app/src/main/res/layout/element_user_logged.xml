@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/user_avatar_box"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="25dp"
             android:layout_gravity="center_vertical"
             android:gravity="start"
             android:orientation="vertical">
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="60dp">
 
         <LinearLayout
             android:id="@+id/logout_button"
@@ -105,8 +105,8 @@
             android:id="@+id/edit_user_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/dialog_buttons_background"
             android:clickable="true"
             android:focusable="true"

@@ -116,16 +116,14 @@ public class ConnectionService extends IntentService {
             case CREATE:
             case EDIT:
                 try {
-                    showMessageAndDeleteData();
-                    launchLogin();
+                    if (showMessageAndDeleteData()) launchLogin();
                 } catch (JSONException jsonException) {
                     Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
                 break;
             case DELETE:
                 try {
-                    showMessageAndDeleteData();
-                    if (isMainActivityInstantiated())
+                    if (showMessageAndDeleteData() && isMainActivityInstantiated())
                         mainActivityReference.get().logout();
                 } catch (JSONException jsonException) {
                     Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
@@ -135,10 +133,18 @@ public class ConnectionService extends IntentService {
         else ToastUtils.makeCustomToast(getApplicationContext(), "Connection error, operation could not be performed (" + requestedOperation + ")");
     }
 
-    private void showMessageAndDeleteData() throws JSONException {
-        String message = new JSONObject(userJsonString).getString("message");
+    private boolean showMessageAndDeleteData() throws JSONException {
+
+        JSONObject userJson = new JSONObject(userJsonString);
+
+        String message = userJson.getString("message");
+        boolean success = userJson.getBoolean("success");
+
         ToastUtils.makeCustomToast(getApplicationContext(), message);
-        startService(new Intent(getApplicationContext(), DataDeleterService.class));
+
+        if (success) startService(new Intent(getApplicationContext(), DataDeleterService.class));
+
+        return success;
     }
 
     private void launchLogin() {
@@ -155,11 +161,12 @@ public class ConnectionService extends IntentService {
     private void connectAndRetrieve(String requestedOperation, String userNick, String userPass) {
 
         String apiURL = BASE_URL;
+        HttpURLConnection connection = null;
 
         if (requestedLogin) apiURL = apiURL + userNick + "/" + userPass;
 
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(apiURL).openConnection();
+            connection = (HttpURLConnection) new URL(apiURL).openConnection();
 
             connection.setRequestMethod(requestedOperation);
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -190,11 +197,17 @@ public class ConnectionService extends IntentService {
 
             userJsonString = response.toString();
 
-            responseCode = connection.getResponseCode();
-            connection.disconnect();
-
-        } catch (IOException ie) {
-            Log.e(TAG, "connectAndRetrieve(). IOException: " + ie.toString());
+        } catch (IOException ioe) {
+            Log.e(TAG, "connectAndRetrieve(). IOException: " + ioe.toString());
+        } finally {
+            if (connection != null) {
+                try {
+                    responseCode = connection.getResponseCode();
+                    connection.disconnect();
+                } catch (IOException ioe) {
+                    Log.e(TAG, "connectAndRetrieve(). IOException: " + ioe.toString());
+                }
+            }
         }
     }
 
@@ -207,7 +220,7 @@ public class ConnectionService extends IntentService {
                 sendUserData();
                 break;
 
-            case 300:
+            case 500:
                 hideLoadingScreen();
                 String invalidIdMessage = getResources().getString(R.string.id_not_valid) + userNick + " / " + userPass;
                 ToastUtils.makeCustomToast(getApplicationContext(), invalidIdMessage);
@@ -215,7 +228,7 @@ public class ConnectionService extends IntentService {
 
             default:
                 hideLoadingScreen();
-                String connectionError = getResources().getString(R.string.connection_error);
+                String connectionError = getResources().getString(R.string.connection_error) + " Code: " + responseCode;
                 ToastUtils.makeCustomToast(getApplicationContext(), connectionError);
         }
     }

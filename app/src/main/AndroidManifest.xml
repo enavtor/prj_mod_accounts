@@ -22,7 +22,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -32,7 +31,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.activities.DialogActivity">
+        <activity android:name=".views.activities.DialogActivity"
+                  android:theme="@style/AppTransparentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

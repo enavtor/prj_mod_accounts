@@ -26,11 +26,10 @@ public class DialogActivity extends AppCompatActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if (ToastUtils.cancelCurrentToast()) return true;
+        if (event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
 
         else return super.dispatchKeyEvent(event);
     }
-
 
     //Initialization of the activity views and buttons:
     private void initializeViews (){
@@ -40,13 +39,7 @@ public class DialogActivity extends AppCompatActivity {
         LinearLayout affirmative = findViewById(R.id.dialog_affirmative_button);
         LinearLayout negative = findViewById(R.id.dialog_negative_button);
 
-        /*if (getIntent().hasExtra("deleteSingleEvent")) {
-            title.setText(getResources().getString(R.string.delete_single_dialog_title));
-        }
-
-        else if (getIntent().hasExtra("deletePrevAlarm")) {
-            title.setText(getResources().getString(R.string.delete_alarm_dialog_title));
-        }*/
+        title.setText(getIntent().getStringExtra(MainActivity.DIALOG_TEXT_FIELD));
 
         negative.requestFocus();
 
@@ -54,7 +47,8 @@ public class DialogActivity extends AppCompatActivity {
         affirmative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                performOperation();
+                setResult(RESULT_OK);
+                finish();
             }
         });
 
@@ -66,10 +60,5 @@ public class DialogActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void performOperation() {
-        setResult(RESULT_OK);
-        finish();
     }
 }

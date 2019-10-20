@@ -7,13 +7,21 @@
     <string name="date">EEEE dd MMMM, yyyy</string>
     <string name="ir_yellow">Settings</string>
     <string name="ir_blue">Help</string>
-    <string name="hint_create_user_name">Enter your name</string>
-    <string name="hint_create_user_surname">Enter your surname</string>
-    <string name="create_user_sections_divider">New user login credentials</string>
-    <string name="hint_create_user_nickname">Enter nickname</string>
-    <string name="hint_create_user_password">Enter password</string>
+
+    <string name="title_user_params_name">User name:</string>
+    <string name="title_user_params_surname">User surname:</string>
+    <string name="title_user_params_nickname">User nickname:</string>
+    <string name="title_user_params_password">User password:</string>
+
+    <string name="hint_user_params_name">Enter your name</string>
+    <string name="hint_user_params_surname">Enter your surname</string>
+    <string name="user_params_sections_divider">New user login credentials</string>
+    <string name="hint_user_params_nickname">Enter nickname</string>
+    <string name="hint_user_params_password">Enter password</string>
+
     <string name="hint_login_nickname">Nickname…</string>
     <string name="hint_login_password">Password…</string>
+
     <string name="back">Back</string>
     <string name="no_user">User</string>
     <string name="no_id">ID</string>
@@ -21,7 +29,8 @@
     <string name="login_button">Login</string>
     <string name="create_new_user_button">Create new user</string>
 
-    <string name="accept_button">Create user</string>
+    <string name="accept_create_user_button">Create user</string>
+    <string name="accept_edit_user_button">Edit user</string>
     <string name="cancel_button">Cancel</string>
 
     <string name="loading_layout_title">Logging into server</string>
@@ -37,7 +46,16 @@
     <!--\u0020 means a white space-->
     <string name="welcome_message_head">Hello\u0020</string>
     <string name="welcome_message_tail">, we welcome you</string>
-    <string name="id_not_entered">Enter a user ID to login</string>
+
+    <string name="id_not_entered">Enter a user ID and Password to login</string>
+
     <string name="connection_error">Server connection error, please try again</string>
-    <string name="id_not_valid">There is not a user with id:\u0020</string>
+
+    <string name="id_not_valid">There is not a user with id / password:\u0020</string>
+
+    <string name="no_data_edited">"The user info was not modified!!!"</string>
+
+    <string name="dialog_perform_logout">"Do you really wish to logout fom the system? (You can always login again with your current user)"</string>
+    <string name="dialog_edit_user">"Do you really wish to edit your user information? (You should annotate the password and nickname if they were changed)"</string>
+    <string name="dialog_delete_user">"Do you really wish to delete your user? (You can always create a new one, but all the information from the current user will be lost forever)"</string>
 </resources>
