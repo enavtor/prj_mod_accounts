@@ -95,9 +95,7 @@ public class UserDataService extends IntentService {
 
         resetUserData();
 
-        if (mainActivityReference != null && mainActivityReference.get() != null) {
-            mainActivityReference.get().setUserInformation();
-        }
+        setUserData();
     }
 
     private static void setUserAttributes() {
@@ -150,6 +148,12 @@ public class UserDataService extends IntentService {
 
     //Method that returns the user surname:
     public static String getUserPassword() { return userPassword; }
+
+    private void setUserData() {
+        if (mainActivityReference != null && mainActivityReference.get() != null) {
+            mainActivityReference.get().setUserInformation();
+        }
+    }
 
     private void resetUserData() {
         userId = userName = userSurname = avatarString = userNickname = userPassword = null;

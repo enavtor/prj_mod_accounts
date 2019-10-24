@@ -4,10 +4,6 @@ import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Intent;
 
-import com.droidmare.accounts.views.activities.MainActivity;
-
-import java.lang.ref.WeakReference;
-
 //App's data deleter service declaration
 //@author Eduardo on 24/05/2018.
 

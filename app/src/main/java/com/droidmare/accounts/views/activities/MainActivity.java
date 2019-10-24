@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                     else finish();
+                    break;
 
                 case KeyEvent.KEYCODE_PROG_GREEN:
                     loginButton.performClick();
@@ -155,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
             userParamsAvatarPreviewBox.setImageBitmap(ImageUtils.decodeBitmapString(newUserEncodedAvatar));
         }
 
-        if (requestCode == dialog_logout_request_code && resultCode == RESULT_OK)
+        else if (requestCode == dialog_logout_request_code && resultCode == RESULT_OK)
             logout();
 
-        if (requestCode == dialog_edit_request_code && resultCode == RESULT_OK)
+        else if (requestCode == dialog_edit_request_code && resultCode == RESULT_OK)
             editUser();
 
-        if (requestCode == dialog_edit_request_code && resultCode == RESULT_OK)
+        else if (requestCode == dialog_delete_request_code && resultCode == RESULT_OK)
             deleteUser();
     }
 
@@ -331,20 +332,24 @@ public class MainActivity extends AppCompatActivity {
 
     //Method that clears all the data related to the user form this app and all the data from the other two apps:
     public void logout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userLogged = false;
 
-        userLogged = false;
+                //Whenever a logout operation takes place, the information on the user parameters layout view must be cleared:
+                userParamsNameTextBox.setText("");
+                userParamsSurnameTextBox.setText("");
+                newUserEncodedAvatar = ImageUtils.encodeBitmapImage(defaultAvatar.getBitmap());
+                userParamsAvatarPreviewBox.setImageDrawable(defaultAvatar);
+                userParamsNicknameTextBox.setText("");
+                userParamsPasswordTextBox.setText("");
 
-        //Whenever a logout operation takes place, the information on the user parameters layout view must be cleared:
-        userParamsNameTextBox.setText("");
-        userParamsSurnameTextBox.setText("");
-        newUserEncodedAvatar = ImageUtils.encodeBitmapImage(defaultAvatar.getBitmap());
-        userParamsAvatarPreviewBox.setImageDrawable(defaultAvatar);
-        userParamsNicknameTextBox.setText("");
-        userParamsPasswordTextBox.setText("");
-
-        //Now the user information is cleared from the rest of elements within this app and the other applications:
-        startService(new Intent(getApplicationContext(), UserDataService.class));
-        startService(new Intent(getApplicationContext(), DataDeleterService.class));
+                //Now the user information is cleared from the rest of elements within this app and the other applications:
+                startService(new Intent(getApplicationContext(), UserDataService.class));
+                startService(new Intent(getApplicationContext(), DataDeleterService.class));
+            }
+        });
     }
 
     private void displayUserParamsLayout() {
