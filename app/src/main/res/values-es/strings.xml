@@ -34,7 +34,6 @@
     <string name="cancel_button">Cancelar</string>
 
     <string name="loading_layout_title">Iniciando sesión</string>
-    <string name="loading_layout_stand_by">Espere por favor…</string>
 
     <string name="dialog_affirmative">Si</string>
     <string name="dialog_negative">No</string>

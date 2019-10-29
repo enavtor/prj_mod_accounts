@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".views.activities.MainActivity">
+        <activity android:name=".views.activities.MainActivity"
+            android:theme="@style/AppThemeTransparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -32,7 +33,7 @@
         </activity>
 
         <activity android:name=".views.activities.DialogActivity"
-                  android:theme="@style/AppTransparentTheme">
+                  android:theme="@style/AppThemeTransparent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

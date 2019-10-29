@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 import com.droidmare.accounts.R;
 import com.droidmare.accounts.models.Multimedia;
 import com.droidmare.accounts.utils.FileUtils;
-import com.droidmare.accounts.utils.ImageUtils;
 import com.droidmare.accounts.views.fragments.FilesFragment;
+import com.shtvsolution.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 

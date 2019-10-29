@@ -1,10 +1,8 @@
 package com.droidmare.accounts.views.activities;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,18 +18,16 @@ import com.droidmare.accounts.R;
 import com.droidmare.accounts.services.ConnectionService;
 import com.droidmare.accounts.services.DataDeleterService;
 import com.droidmare.accounts.services.UserDataService;
-import com.droidmare.accounts.utils.ImageUtils;
-import com.droidmare.accounts.utils.ToastUtils;
 import com.droidmare.accounts.services.DateCheckerService;
+import com.shtvsolution.common.utils.ImageUtils;
+import com.shtvsolution.common.utils.ServiceUtils;
+import com.shtvsolution.common.utils.ToastUtils;
+import com.shtvsolution.common.views.activities.CommonMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends CommonMainActivity {
 
     private static final String TAG = MainActivity.class.getCanonicalName();
 
@@ -68,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout deleteUserButton;
 
     //User params layout elements:
-    private BitmapDrawable defaultAvatar;
     private String newUserEncodedAvatar;
 
     private RelativeLayout userParamsAvatarClickableBox;
@@ -90,12 +85,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        canonicalName = getClass().getCanonicalName();
+
         super.onCreate(savedInstanceState);
 
         //The soft keyboard is hidden in order to avoid it being displayed when the module is launched:
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        setContentView(R.layout.activity_main);
+        //The center and footer layouts must be assigned to the common main layout:
+        includeLayout(R.id.center_element, R.layout.element_center);
 
         //In order to launch specific methods of this class from a service, that service needs a reference to this activity:
         DateCheckerService.setMainActivityReference(this);
@@ -104,19 +103,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Since the DateCheckerService runs on the background, it only should be started if it is not already running(if it is, its method to update the date view is launched):
         if (!DateCheckerService.isInstantiated)
-            startService(new Intent(getApplicationContext(), DateCheckerService.class));
+            ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), DateCheckerService.class));
         else DateCheckerService.setActivitiesDate();
-
-        defaultAvatar = (BitmapDrawable) getDrawable(R.drawable.photo);
 
         //Now all the views can be initialized:
         initializeViews();
 
+        setIrButtonText(IR_RED, getString(R.string.ir_red));
+        setIrButtonText(IR_GREEN, getString(R.string.ir_green));
+
         setButtonsBehaviour();
 
         setUserInformation();
-
-        setVersionNumber();
     }
 
     @Override
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.ir_red).setOnClickListener(new View.OnClickListener() {
+        irRedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=getPackageManager().getLaunchIntentForPackage(DTV_PACKAGE);
@@ -293,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.ir_green).setOnClickListener(new View.OnClickListener() {
+        irGreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginButton.performClick();
@@ -309,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
             userParamsCancelButton.performClick();
 
         //The logging distractor is displayed:
-        findViewById(R.id.layout_loading).setVisibility(View.VISIBLE);
+        displayLoadingScreen(getString(R.string.loading_layout_title));
 
         //The value of userNick will depend on whether this method was launched from the login layout or the user parameters one:
         if (userNick == null) {
@@ -324,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
         loginIntent.putExtra(UserDataService.USER_NICKNAME_FIELD, userNick);
         loginIntent.putExtra(UserDataService.USER_PASSWORD_FIELD, userPass);
 
-        startService(loginIntent);
+        ServiceUtils.startService(getApplicationContext(), loginIntent);
 
         loginNicknameTextBox.setText("");
         loginPasswordTextBox.setText("");
@@ -346,8 +344,9 @@ public class MainActivity extends AppCompatActivity {
                 userParamsPasswordTextBox.setText("");
 
                 //Now the user information is cleared from the rest of elements within this app and the other applications:
-                startService(new Intent(getApplicationContext(), UserDataService.class));
-                startService(new Intent(getApplicationContext(), DataDeleterService.class));
+                Context context = getApplicationContext();
+                ServiceUtils.startService(context, new Intent(context, UserDataService.class));
+                ServiceUtils.startService(context, new Intent(context, DataDeleterService.class));
             }
         });
     }
@@ -381,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
         createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
         createIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson(false).toString());
 
-        startService(createIntent);
+        ServiceUtils.startService(getApplicationContext(), createIntent);
     }
 
     //Method that starts the ConnectionService in order to edit an existing user in the API:
@@ -396,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
             createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.EDIT);
             createIntent.putExtra(UserDataService.USER_JSON_FIELD, userAttributesJson.toString());
 
-            startService(createIntent);
+            ServiceUtils.startService(getApplicationContext(), createIntent);
         }
 
         //If no changes were made the user is notified:
@@ -467,103 +466,36 @@ public class MainActivity extends AppCompatActivity {
 
         deleteIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson(true).toString());
 
-        startService(deleteIntent);
-    }
-
-    public void hideLoadingScreen() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.layout_loading).setVisibility(View.GONE);
-            }
-        });
-    }
-
-    //Method for setting the date text displayed on the upper right corner of the application:
-    public void setDateText() {
-
-        final Calendar calendar = Calendar.getInstance();
-        long time =  calendar.getTimeInMillis();
-        Locale localeDate = Locale.getDefault();
-
-        SimpleDateFormat simpleDate = new SimpleDateFormat(getString(R.string.date),localeDate);
-        String date = simpleDate.format(time);
-
-        final String upperDate = date.substring(0,1).toUpperCase() + date.substring(1);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView dateText = findViewById(R.id.txt_date);
-                dateText.setText(upperDate);
-            }
-        });
+        ServiceUtils.startService(getApplicationContext(), deleteIntent);
     }
 
     //Method that configures the user information view:
+    @Override
     public void setUserInformation() {
 
-        UserDataService.readSharedPrefs(getApplicationContext());
+        super.setUserInformation();
 
         userLogged = UserDataService.getUserId() != null;
 
-        final ImageView avatar = findViewById(R.id.user_photo);
-        final TextView name = findViewById(R.id.user_name);
-        final TextView id = findViewById(R.id.user_id);
-
-        if (userLogged) {
-
-            final Bitmap userAvatar = UserDataService.getDecodedAvatar();
-            final String userName = UserDataService.getUserFullName();
-            final String userNickname = UserDataService.getUserNickname();
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (userLogged) {
                     userLoggedLayoutContainer.setVisibility(View.VISIBLE);
                     loginLayoutContainer.setVisibility(View.INVISIBLE);
 
-                    avatar.setImageBitmap(userAvatar);
-                    loggedUserAvatar.setImageBitmap(userAvatar);
-
-                    name.setText(userName);
-                    loggedUserName.setText(userName);
-
-                    id.setText(userNickname);
-                    loggedUserNickname.setText(userNickname);
+                    loggedUserAvatar.setImageBitmap(UserDataService.getDecodedAvatar());
+                    loggedUserName.setText(UserDataService.getUserFullName());
+                    loggedUserNickname.setText(UserDataService.getUserNickname());
                 }
-            });
-        }
 
-        else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
+                else {
                     userLoggedLayoutContainer.setVisibility(View.INVISIBLE);
                     loginLayoutContainer.setVisibility(View.VISIBLE);
 
                     loginNicknameTextBox.requestFocus();
-
-                    avatar.setImageBitmap(defaultAvatar.getBitmap());
-                    name.setText(getString(R.string.no_user));
-                    id.setText(getString(R.string.no_id));
                 }
-            });
-        }
-    }
-
-    private void setVersionNumber() {
-
-        String versionNumber = "";
-
-        try {
-            versionNumber = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-
-        }catch (PackageManager.NameNotFoundException nfe){
-            Log.e(TAG, "setVersionNumber. NameNotFoundException: " + nfe.getMessage());
-        }
-
-        ((TextView) findViewById(R.id.version_number)).setText(versionNumber);
+            }
+        });
     }
 }

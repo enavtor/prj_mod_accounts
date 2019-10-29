@@ -34,7 +34,6 @@
     <string name="cancel_button">Cancel</string>
 
     <string name="loading_layout_title">Logging into server</string>
-    <string name="loading_layout_stand_by">Please stand by…</string>
 
     <string name="dialog_affirmative">Yes</string>
     <string name="dialog_negative">No</string>

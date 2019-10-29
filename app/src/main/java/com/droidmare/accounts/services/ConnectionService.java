@@ -1,14 +1,15 @@
 package com.droidmare.accounts.services;
 
-import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
 import com.droidmare.accounts.R;
-import com.droidmare.accounts.utils.ToastUtils;
 import com.droidmare.accounts.views.activities.MainActivity;
+import com.shtvsolution.common.services.CommonIntentService;
+import com.shtvsolution.common.utils.ServiceUtils;
+import com.shtvsolution.common.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +24,7 @@ import java.net.URL;
 
 //Service in charge of establishing a connection to the API and performing user data operations.
 //Created by enavas on 16/06/2019.
-public class ConnectionService extends IntentService {
-
-    private static final String TAG = ConnectionService.class.getCanonicalName();
+public class ConnectionService extends CommonIntentService {
 
     //API base URL:
     public static final String BASE_URL = "http://192.168.1.49:3000/user/";
@@ -51,8 +50,8 @@ public class ConnectionService extends IntentService {
 
     //String array with all the modules packages names:
     private static final String[] modulesPackages = {
-            ACCOUNTS_MODULE_PACKAGE,
-            CALENDAR_MODULE_PACKAGE
+        ACCOUNTS_MODULE_PACKAGE,
+        CALENDAR_MODULE_PACKAGE
     };
 
     //User data receiver package:
@@ -77,10 +76,13 @@ public class ConnectionService extends IntentService {
         mainActivityReference = new WeakReference<>(activity);
     }
 
-    public ConnectionService() { super(TAG); }
+    public ConnectionService() { super(ConnectionService.class.getCanonicalName()); }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onHandleIntent(Intent intent) {
+        COMMON_TAG = getClass().getCanonicalName();
+        
+        super.onHandleIntent(intent);
 
         responseCode = -1;
 
@@ -104,11 +106,11 @@ public class ConnectionService extends IntentService {
                     userPass = userJson.getString(UserDataService.USER_PASSWORD_FIELD);
                 }
             } catch (JSONException jsonException) {
-                Log.e(TAG, "onHandleIntent(103). JSONException: " + jsonException.getMessage());
+                Log.e(COMMON_TAG, "onHandleIntent(103). JSONException: " + jsonException.getMessage());
             }
         }
 
-        connectAndRetrieve(requestedOperation, userNick, userPass);
+        sendRequest(requestedOperation, userNick, userPass);
 
         if (requestedLogin) performLogin();
 
@@ -118,7 +120,7 @@ public class ConnectionService extends IntentService {
                 try {
                     if (showMessageAndDeleteData()) launchLogin();
                 } catch (JSONException jsonException) {
-                    Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
+                    Log.e(COMMON_TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
                 break;
             case DELETE:
@@ -126,7 +128,7 @@ public class ConnectionService extends IntentService {
                     if (showMessageAndDeleteData() && isMainActivityInstantiated())
                         mainActivityReference.get().logout();
                 } catch (JSONException jsonException) {
-                    Log.e(TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
+                    Log.e(COMMON_TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
         }
 
@@ -142,7 +144,7 @@ public class ConnectionService extends IntentService {
 
         ToastUtils.makeCustomToast(getApplicationContext(), message);
 
-        if (success) startService(new Intent(getApplicationContext(), DataDeleterService.class));
+        if (success) ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), DataDeleterService.class));
 
         return success;
     }
@@ -158,7 +160,7 @@ public class ConnectionService extends IntentService {
     }
 
     //Method that establishes a connection to the API and performs the required operations based on the requestedOperation param:
-    private void connectAndRetrieve(String requestedOperation, String userNick, String userPass) {
+    private void sendRequest(String requestedOperation, String userNick, String userPass) {
 
         String apiURL = BASE_URL;
         HttpURLConnection connection = null;
@@ -198,14 +200,14 @@ public class ConnectionService extends IntentService {
             userJsonString = response.toString();
 
         } catch (IOException ioe) {
-            Log.e(TAG, "connectAndRetrieve(). IOException: " + ioe.toString());
+            Log.e(COMMON_TAG, "sendRequest(). IOException: " + ioe.toString());
         } finally {
             if (connection != null) {
                 try {
                     responseCode = connection.getResponseCode();
                     connection.disconnect();
                 } catch (IOException ioe) {
-                    Log.e(TAG, "connectAndRetrieve(). IOException: " + ioe.toString());
+                    Log.e(COMMON_TAG, "sendRequest(). IOException: " + ioe.toString());
                 }
             }
         }
@@ -254,7 +256,7 @@ public class ConnectionService extends IntentService {
 
                 launcher.putExtra(UserDataService.USER_JSON_FIELD, userJsonString);
 
-                startService(launcher);
+                ServiceUtils.startService(getApplicationContext(), launcher);
             }
 
             //The execution thread is going to be paused to let the UserDataService
@@ -276,7 +278,7 @@ public class ConnectionService extends IntentService {
             ToastUtils.makeCustomToast(getApplicationContext(), welcomeMessage);
 
         } catch (JSONException jsonException) {
-            Log.e(TAG, "sendUserData(). JSONException: " + jsonException.getMessage());
+            Log.e(COMMON_TAG, "sendUserData(). JSONException: " + jsonException.getMessage());
             ToastUtils.makeCustomToast(getApplicationContext(), userJsonString);
             hideLoadingScreen();
         }
@@ -295,7 +297,7 @@ public class ConnectionService extends IntentService {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ie) {
-            Log.e(TAG, "pauseServiceThread(). InterruptedException: " + ie.getMessage());
+            Log.e(COMMON_TAG, "pauseServiceThread(). InterruptedException: " + ie.getMessage());
         }
     }
 
