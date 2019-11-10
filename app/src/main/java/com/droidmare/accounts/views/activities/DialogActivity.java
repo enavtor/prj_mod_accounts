@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.droidmare.accounts.R;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 //Activity for displaying a dialog before performing an operation
 //@author Eduardo on 31/08/2019.

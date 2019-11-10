@@ -19,10 +19,10 @@ import com.droidmare.accounts.services.ConnectionService;
 import com.droidmare.accounts.services.DataDeleterService;
 import com.droidmare.accounts.services.UserDataService;
 import com.droidmare.accounts.services.DateCheckerService;
-import com.shtvsolution.common.utils.ImageUtils;
-import com.shtvsolution.common.utils.ServiceUtils;
-import com.shtvsolution.common.utils.ToastUtils;
-import com.shtvsolution.common.views.activities.CommonMainActivity;
+import com.droidmare.common.utils.ImageUtils;
+import com.droidmare.common.utils.ServiceUtils;
+import com.droidmare.common.utils.ToastUtils;
+import com.droidmare.common.views.activities.CommonMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

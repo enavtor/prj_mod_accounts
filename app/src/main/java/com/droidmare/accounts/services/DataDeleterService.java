@@ -3,8 +3,8 @@ package com.droidmare.accounts.services;
 import android.content.ComponentName;
 import android.content.Intent;
 
-import com.shtvsolution.common.services.CommonIntentService;
-import com.shtvsolution.common.utils.ServiceUtils;
+import com.droidmare.common.services.CommonIntentService;
+import com.droidmare.common.utils.ServiceUtils;
 
 //App's data deleter service declaration
 //@author Eduardo on 24/05/2018.

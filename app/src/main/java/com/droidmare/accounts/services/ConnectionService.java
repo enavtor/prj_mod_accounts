@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.droidmare.accounts.R;
 import com.droidmare.accounts.views.activities.MainActivity;
-import com.shtvsolution.common.services.CommonIntentService;
-import com.shtvsolution.common.utils.ServiceUtils;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.services.CommonIntentService;
+import com.droidmare.common.utils.ServiceUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

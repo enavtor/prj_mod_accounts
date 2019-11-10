@@ -17,7 +17,7 @@ import com.droidmare.accounts.R;
 import com.droidmare.accounts.models.Multimedia;
 import com.droidmare.accounts.utils.FileUtils;
 import com.droidmare.accounts.views.fragments.FilesFragment;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 

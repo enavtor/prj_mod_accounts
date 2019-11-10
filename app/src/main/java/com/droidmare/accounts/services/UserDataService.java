@@ -2,7 +2,7 @@ package com.droidmare.accounts.services;
 
 import android.content.Intent;
 
-import com.shtvsolution.common.services.CommonUserData;
+import com.droidmare.common.services.CommonUserData;
 
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
