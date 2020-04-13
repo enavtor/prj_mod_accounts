@@ -7,22 +7,22 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="650dp"
+        android:layout_width="@dimen/dpi_650dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="@dimen/dpi_10dp">
 
         <ImageView
             android:id="@+id/user_params_avatar_preview_box"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginEnd="30dp"
+            android:layout_width="@dimen/dpi_160dp"
+            android:layout_height="@dimen/dpi_160dp"
+            android:layout_marginEnd="@dimen/dpi_30dp"
             android:layout_centerVertical="true"/>
 
         <RelativeLayout
             android:id="@+id/user_params_avatar_clickable_box"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginEnd="30dp"
+            android:layout_width="@dimen/dpi_160dp"
+            android:layout_height="@dimen/dpi_160dp"
+            android:layout_marginEnd="@dimen/dpi_30dp"
             android:layout_centerVertical="true"
             android:focusable="true"
             android:clickable="true"
@@ -39,24 +39,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="@dimen/dpi_5dp"
+                android:layout_marginEnd="@dimen/dpi_5dp"
+                android:layout_marginBottom="@dimen/dpi_5dp"
                 android:gravity="center"
                 android:text="@string/title_user_params_name"
                 android:textAlignment="center"
                 android:textColor="@color/colorTextSplash"
-                android:textSize="25sp" />
+                android:textSize="@dimen/dpi_25sp" />
 
             <EditText
                 android:id="@+id/user_params_name_input_box"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/dpi_40dp"
                 android:background="@drawable/text_box_background"
                 android:gravity="center_vertical"
-                android:padding="5dp"
+                android:padding="@dimen/dpi_5dp"
                 android:textColor="@color/black"
-                android:textSize="27sp"
+                android:textSize="@dimen/dpi_27sp"
                 android:hint="@string/hint_user_params_name"
                 android:textColorHint="@color/grey_light_darker"
                 android:textCursorDrawable="@drawable/text_cursor_color" />
@@ -66,7 +66,7 @@
             android:id="@+id/user_params_surname_input_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
             android:layout_toEndOf="@id/user_params_avatar_preview_box"
             android:layout_below="@id/user_params_name_input_container"
             android:orientation="vertical">
@@ -74,24 +74,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="@dimen/dpi_5dp"
+                android:layout_marginEnd="@dimen/dpi_5dp"
+                android:layout_marginBottom="@dimen/dpi_5dp"
                 android:gravity="center"
                 android:text="@string/title_user_params_surname"
                 android:textAlignment="center"
                 android:textColor="@color/colorTextSplash"
-                android:textSize="25sp" />
+                android:textSize="@dimen/dpi_25sp" />
 
             <EditText
                 android:id="@+id/user_params_surname_input_box"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/dpi_40dp"
                 android:background="@drawable/text_box_background"
                 android:gravity="center_vertical"
-                android:padding="5dp"
+                android:padding="@dimen/dpi_5dp"
                 android:textColor="@color/black"
-                android:textSize="27sp"
+                android:textSize="@dimen/dpi_27sp"
                 android:hint="@string/hint_user_params_surname"
                 android:textColorHint="@color/grey_light_darker"
                 android:textCursorDrawable="@drawable/text_cursor_color" />
@@ -101,61 +101,61 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="@dimen/dpi_5dp"
+        android:layout_marginBottom="@dimen/dpi_5dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="1dp"
+            android:layout_width="@dimen/dpi_200dp"
+            android:layout_height="@dimen/dpi_1dp"
             android:background="@color/colorTextSplash" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="@dimen/dpi_5dp"
+            android:layout_marginEnd="@dimen/dpi_5dp"
             android:gravity="center"
             android:text="@string/user_params_sections_divider"
             android:textAlignment="center"
             android:textColor="@color/colorTextSplash"
-            android:textSize="22sp" />
+            android:textSize="@dimen/dpi_22sp" />
 
         <RelativeLayout
-            android:layout_width="200dp"
-            android:layout_height="1dp"
+            android:layout_width="@dimen/dpi_200dp"
+            android:layout_height="@dimen/dpi_1dp"
             android:background="@color/colorTextSplash" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/user_params_nickname_input_container"
-        android:layout_width="650dp"
+        android:layout_width="@dimen/dpi_650dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dpi_5dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginStart="@dimen/dpi_5dp"
+            android:layout_marginEnd="@dimen/dpi_5dp"
+            android:layout_marginBottom="@dimen/dpi_5dp"
             android:gravity="center"
             android:text="@string/title_user_params_nickname"
             android:textAlignment="center"
             android:textColor="@color/colorTextSplash"
-            android:textSize="25sp" />
+            android:textSize="@dimen/dpi_25sp" />
 
         <EditText
             android:id="@+id/user_params_nickname_input_box"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/dpi_40dp"
             android:background="@drawable/text_box_background"
             android:gravity="center_vertical"
-            android:padding="5dp"
+            android:padding="@dimen/dpi_5dp"
             android:textColor="@color/black"
-            android:textSize="27sp"
+            android:textSize="@dimen/dpi_27sp"
             android:hint="@string/hint_user_params_nickname"
             android:textColorHint="@color/grey_light_darker"
             android:textCursorDrawable="@drawable/text_cursor_color"/>
@@ -163,31 +163,31 @@
 
     <LinearLayout
         android:id="@+id/user_params_password_input_container"
-        android:layout_width="650dp"
+        android:layout_width="@dimen/dpi_650dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dpi_5dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="@dimen/dpi_5dp"
+            android:layout_marginEnd="@dimen/dpi_5dp"
             android:gravity="center"
             android:text="@string/title_user_params_password"
             android:textAlignment="center"
             android:textColor="@color/colorTextSplash"
-            android:textSize="25sp" />
+            android:textSize="@dimen/dpi_25sp" />
 
         <EditText
             android:id="@+id/user_params_password_input_box"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/dpi_40dp"
             android:background="@drawable/text_box_background"
             android:gravity="center_vertical"
-            android:padding="5dp"
+            android:padding="@dimen/dpi_5dp"
             android:textColor="@color/black"
-            android:textSize="27sp"
+            android:textSize="@dimen/dpi_27sp"
             android:hint="@string/hint_user_params_password"
             android:textColorHint="@color/grey_light_darker"
             android:textCursorDrawable="@drawable/text_cursor_color"/>
@@ -196,7 +196,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/dpi_30dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -204,19 +204,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_buttons_background"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/dpi_20dp"
             android:clickable="true"
             android:focusable="true"
-            android:padding="2dp">
+            android:padding="@dimen/dpi_2dp">
 
             <TextView
                 android:id="@+id/user_params_affirmative_text"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dpi_250dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="@dimen/dpi_2dp"
                 android:textColor="@color/white"
-                android:textSize="27sp" />
+                android:textSize="@dimen/dpi_27sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -226,16 +226,16 @@
             android:background="@drawable/dialog_buttons_background"
             android:clickable="true"
             android:focusable="true"
-            android:padding="2dp">
+            android:padding="@dimen/dpi_2dp">
 
             <TextView
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dpi_250dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="@dimen/dpi_2dp"
                 android:text="@string/cancel_button"
                 android:textColor="@color/white"
-                android:textSize="27sp" />
+                android:textSize="@dimen/dpi_27sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

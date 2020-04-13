@@ -22,6 +22,8 @@
     <string name="hint_login_nickname">Nickname…</string>
     <string name="hint_login_password">Password…</string>
 
+    <string name="name_field">Name:</string>
+
     <string name="back">Back</string>
     <string name="no_user">User</string>
     <string name="no_id">ID</string>
@@ -33,7 +35,10 @@
     <string name="accept_edit_user_button">Edit user</string>
     <string name="cancel_button">Cancel</string>
 
-    <string name="loading_layout_title">Logging into server</string>
+    <string name="logging_into_server">Logging into server</string>
+    <string name="creating_new_user">Creating new user</string>
+    <string name="editing_existing_user">Editing user</string>
+    <string name="deleting_existing_user">Deleting user</string>
 
     <string name="dialog_affirmative">Yes</string>
     <string name="dialog_negative">No</string>
@@ -50,11 +55,21 @@
 
     <string name="connection_error">Server connection error, please try again</string>
 
-    <string name="id_not_valid">There is not a user with id / password:\u0020</string>
+    <string name="id_not_valid">There is not a user with id = %1$s and/or password = %2$s\u0020</string>
 
-    <string name="no_data_edited">"The user info was not modified!!!"</string>
+    <string name="no_data_edited">The user info was not modified!!!</string>
 
-    <string name="dialog_perform_logout">"Do you really wish to logout fom the system? (You can always login again with your current user)"</string>
-    <string name="dialog_edit_user">"Do you really wish to edit your user information? (You should annotate the password and nickname if they were changed)"</string>
-    <string name="dialog_delete_user">"Do you really wish to delete your user? (You can always create a new one, but all the information from the current user will be lost forever)"</string>
+    <string name="dialog_perform_logout">Do you really wish to logout fom the system? (You can always login again with your current user)</string>
+    <string name="dialog_edit_user">Do you really wish to edit your user information? (You should annotate the password and nickname if they were changed)"</string>
+    <string name="dialog_delete_user">Do you really wish to delete your user? (You can always create a new one, but all the information from the current user will be lost forever)</string>
+
+    <string name="operation_error">Connection error, the operation could not be performed!!!</string>
+
+    <string name="operation_create_success">The user was successfully created</string>
+    <string name="operation_create_fail">The user could not be created since the nickname already exits!!!</string>
+
+    <string name="operation_edit_success">The user was successfully edited</string>
+    <string name="operation_edit_fail">The user could not be updated since the nickname was changed and the new one is already in use!!!</string>
+
+    <string name="operation_delete_success">The user was successfully deleted</string>
 </resources>

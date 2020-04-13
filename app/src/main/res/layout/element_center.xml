@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/overscan">
+    android:layout_margin="@dimen/dpi_dec_23.4dp">
 
     <RelativeLayout
         android:id="@+id/login_layout"
@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
-        android:paddingBottom="@dimen/footer_layout_padding"
-        android:paddingTop="@dimen/footer_layout_padding"
+        android:paddingBottom="@dimen/dpi_40dp"
+        android:paddingTop="@dimen/dpi_40dp"
         android:visibility="gone">
 
         <include
@@ -26,8 +26,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
-        android:paddingBottom="@dimen/footer_layout_padding"
-        android:paddingTop="@dimen/footer_layout_padding"
+        android:paddingBottom="@dimen/dpi_40dp"
+        android:paddingTop="@dimen/dpi_40dp"
         android:visibility="gone">
 
         <include
@@ -42,8 +42,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
-        android:paddingBottom="@dimen/footer_layout_padding"
-        android:paddingTop="@dimen/footer_layout_padding"
+        android:paddingBottom="@dimen/dpi_40dp"
+        android:paddingTop="@dimen/dpi_40dp"
         android:visibility="gone">
 
         <include

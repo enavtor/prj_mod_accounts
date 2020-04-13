@@ -11,7 +11,7 @@
     <string name="title_user_params_name">Nombre del usuario:</string>
     <string name="title_user_params_surname">Apellido del usuario:</string>
     <string name="title_user_params_nickname">Nickname de usuario:</string>
-    <string name="title_user_params_password">Comntraseña de usuario:</string>
+    <string name="title_user_params_password">Contraseña de usuario:</string>
 
     <string name="hint_user_params_name">Introduzca su nombre</string>
     <string name="hint_user_params_surname">Introduzca su apellido</string>
@@ -21,6 +21,8 @@
 
     <string name="hint_login_nickname">Nickname…</string>
     <string name="hint_login_password">Contraseña…</string>
+
+    <string name="name_field">Nombre:</string>
 
     <string name="back">Volver</string>
     <string name="no_user">Usuario</string>
@@ -33,14 +35,17 @@
     <string name="accept_edit_user_button">Editar usuario</string>
     <string name="cancel_button">Cancelar</string>
 
-    <string name="loading_layout_title">Iniciando sesión</string>
+    <string name="logging_into_server">Iniciando sesión</string>
+    <string name="creating_new_user">Creando nuevo usuario</string>
+    <string name="editing_existing_user">Editando usuario</string>
+    <string name="deleting_existing_user">Borrando usuario</string>
 
     <string name="dialog_affirmative">Si</string>
     <string name="dialog_negative">No</string>
 
     <string name="logout_button">Cerrar sesión</string>
     <string name="edit_user_button">Editar usuario</string>
-    <string name="delete_user_button">Eliminar usario</string>
+    <string name="delete_user_button">Eliminar usuario</string>
 
     <!--\u0020 means a white space-->
     <string name="welcome_message_head">Hola\u0020</string>
@@ -50,11 +55,21 @@
 
     <string name="connection_error">Error al conectar con el servidor, vuelva a intentarlo</string>
 
-    <string name="id_not_valid">No existe un usurario con id / password:\u0020</string>
+    <string name="id_not_valid">No existe un usuario con id = %1$s y/o password = %2$s\u0020</string>
 
-    <string name="no_data_edited">"No se ha modificado la información del usuario!!!"</string>
+    <string name="no_data_edited">No se ha modificado la información del usuario!!!</string>
 
-    <string name="dialog_perform_logout">"¿Realmente desea cerrar sesión? (Podrá volver a iniciar sesión con su usuario actual en cualquier momento)"</string>
-    <string name="dialog_edit_user">"¿Realmente desea editar la información de su usuario? (Debería apuntar el nickname y la contraseña si estos han sido modificados)"</string>
-    <string name="dialog_delete_user">"¿Realmente desea eleminar completamente su usuario? (Siempre podrá crear uno nuevo, pero toda la información del actual se perderá para siempre)"</string>
+    <string name="dialog_perform_logout">¿Realmente desea cerrar sesión? (Podrá volver a iniciar sesión con su usuario actual en cualquier momento)</string>
+    <string name="dialog_edit_user">¿Realmente desea editar la información de su usuario? (Debería apuntar el nickname y la contraseña si estos han sido modificados)</string>
+    <string name="dialog_delete_user">¿Realmente desea eleminar completamente su usuario? (Siempre podrá crear uno nuevo, pero toda la información del actual se perderá para siempre)</string>
+
+    <string name="operation_error">Error de conexión, la operación no pudo llevarse a cabo!!!</string>
+
+    <string name="operation_create_success">El usuario ha sido creado con éxito</string>
+    <string name="operation_create_fail">El usuario no pudo ser creado dado que el nickname ya existe!!!</string>
+
+    <string name="operation_edit_success">El usuario ha sido modificado con éxito</string>
+    <string name="operation_edit_fail">El usuario no pudo ser modificado dado que el nickname se ha cambiado y el nuevo ya está en uso!!!</string>
+
+    <string name="operation_delete_success">El usuario ha sido eliminado con éxito</string>
 </resources>

@@ -1,9 +1,13 @@
 package com.droidmare.accounts.views.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +30,9 @@ import com.droidmare.common.views.activities.CommonMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+//Main activity declaration
+//@author Eduardo on 31/07/2018.
 
 public class MainActivity extends CommonMainActivity {
 
@@ -115,6 +122,12 @@ public class MainActivity extends CommonMainActivity {
         setButtonsBehaviour();
 
         setUserInformation();
+
+        int readSdPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int writeSdPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (readSdPermission == PackageManager.PERMISSION_DENIED || writeSdPermission == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
     }
 
     @Override
@@ -278,6 +291,7 @@ public class MainActivity extends CommonMainActivity {
                 }
                 else {
                     loginLayoutContainer.setVisibility(View.VISIBLE);
+                    irGreenButton.setVisibility(View.VISIBLE);
                     loginButton.requestFocus();
                 }
             }
@@ -307,7 +321,7 @@ public class MainActivity extends CommonMainActivity {
             userParamsCancelButton.performClick();
 
         //The logging distractor is displayed:
-        displayLoadingScreen(getString(R.string.loading_layout_title));
+        displayLoadingScreen(getString(R.string.logging_into_server));
 
         //The value of userNick will depend on whether this method was launched from the login layout or the user parameters one:
         if (userNick == null) {
@@ -351,9 +365,13 @@ public class MainActivity extends CommonMainActivity {
         });
     }
 
+    //Method that displays the layout in which the user can be modified or created, depending on the usrLogged variable value:
     private void displayUserParamsLayout() {
         if (userLogged) userLoggedLayoutContainer.setVisibility(View.GONE);
-        else loginLayoutContainer.setVisibility(View.GONE);
+        else {
+            loginLayoutContainer.setVisibility(View.GONE);
+            irGreenButton.setVisibility(View.GONE);
+        }
 
         userParamsLayoutContainer.setVisibility(View.VISIBLE);
         userParamsLayoutContainer.requestFocus();
@@ -380,6 +398,9 @@ public class MainActivity extends CommonMainActivity {
         createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.CREATE);
         createIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson(false).toString());
 
+        //The logging distractor is displayed:
+        displayLoadingScreen(getString(R.string.creating_new_user));
+
         ServiceUtils.startService(getApplicationContext(), createIntent);
     }
 
@@ -394,6 +415,9 @@ public class MainActivity extends CommonMainActivity {
 
             createIntent.putExtra(ConnectionService.REQUESTED_OPERATION_FIELD, ConnectionService.EDIT);
             createIntent.putExtra(UserDataService.USER_JSON_FIELD, userAttributesJson.toString());
+
+            //The logging distractor is displayed:
+            displayLoadingScreen(getString(R.string.editing_existing_user));
 
             ServiceUtils.startService(getApplicationContext(), createIntent);
         }
@@ -466,23 +490,30 @@ public class MainActivity extends CommonMainActivity {
 
         deleteIntent.putExtra(UserDataService.USER_JSON_FIELD, getUserAttributesJson(true).toString());
 
+        //The logging distractor is displayed:
+        displayLoadingScreen(getString(R.string.deleting_existing_user));
+
         ServiceUtils.startService(getApplicationContext(), deleteIntent);
     }
 
-    //Method that configures the user information view:
     @Override
+    //Method that configures the user information view (it overrides the CommonMainActivity method since this class requires more complex operations):
     public void setUserInformation() {
 
         super.setUserInformation();
 
+        //It is very important to know if there is a user logged into the system order to establish the views that must be updated:
         userLogged = UserDataService.getUserId() != null;
 
+        //Since this method will be called from a service executed on the background, the operation that affects
+        //the views must be explicitly executed on the main thread, otherwise an exception shall occur:
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (userLogged) {
                     userLoggedLayoutContainer.setVisibility(View.VISIBLE);
                     loginLayoutContainer.setVisibility(View.INVISIBLE);
+                    irGreenButton.setVisibility(View.GONE);
 
                     loggedUserAvatar.setImageBitmap(UserDataService.getDecodedAvatar());
                     loggedUserName.setText(UserDataService.getUserFullName());
@@ -492,6 +523,7 @@ public class MainActivity extends CommonMainActivity {
                 else {
                     userLoggedLayoutContainer.setVisibility(View.INVISIBLE);
                     loginLayoutContainer.setVisibility(View.VISIBLE);
+                    irGreenButton.setVisibility(View.VISIBLE);
 
                     loginNicknameTextBox.requestFocus();
                 }

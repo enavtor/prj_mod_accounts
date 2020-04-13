@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,27 +22,29 @@ import java.util.ArrayList;
 
 //Folders view adapter declaration
 //@author Eduardo on 13/06/2019.
+
 public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHolder> {
 
     private static ArrayList<Multimedia> fileList;
-
-    private final static int THUMB_SIZE = 200;
 
     private int focusedViewPosition;
 
     private FilesActivity filesActivity;
 
+    // data is passed into the constructor
     public FilesAdapter(ArrayList<Multimedia> items, FilesActivity activity) {
         fileList = items;
         filesActivity = activity;
         focusedViewPosition = -1;
     }
 
-    @Override
-    public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    // inflates the grid element layout from xml when needed
+    @Override @NonNull
+    public FileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = null;
 
+        //Depending on the file type, the layout used to inflate the view will be different:
         switch (viewType) {
             case FileUtils.FOLDER_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_folder, parent, false);
@@ -54,13 +57,16 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
         return new FileViewHolder(view);
     }
 
+
+    // binds the data to the view in each grid element
     @Override
-    public void onBindViewHolder(final FileViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FileViewHolder holder, int position) {
 
         final Multimedia item = fileList.get(position);
 
         final boolean itemIsFolder = item.getType() == FileUtils.FOLDER_TYPE;
 
+        // depending on the type of the file, the thumbnail is obtained and assigned in different ways:
         if (itemIsFolder) {
             if (item.getIcon() != null) holder.image.setImageBitmap(BitmapFactory.decodeFile(item.getIcon().getPath()));
             else holder.image.setImageDrawable(filesActivity.getDrawable(R.drawable.icon_default));
@@ -68,7 +74,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
 
         else {
             if (item.getBitmapIcon() == null) new ThumbnailTask(position, holder).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (Void) null);
-
             else holder.image.setImageBitmap(item.getBitmapIcon());
         }
 
@@ -77,11 +82,14 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
         holder.setBehaviour(item, itemIsFolder);
     }
 
+    // returns the current focused grid item
     public int getFocusedPosition() { return focusedViewPosition; }
 
+    // returns the number of items inside the grid
     @Override
     public int getItemCount() { return fileList.size(); }
 
+    // stores and recycles views as they are scrolled off screen
     public class FileViewHolder extends RecyclerView.ViewHolder {
 
         public TextView name;
@@ -96,6 +104,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
             name = itemView.findViewById(R.id.nameFile);
         }
 
+        // sets the behaviour of the focus and the click listener in each item:
         void setBehaviour (final Multimedia item, final boolean itemIsFolder) {
             itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -117,12 +126,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
                 }
             });
 
+            // the behaviour of folders and images when they are clicked is different:
             if (itemIsFolder) itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String itemName = item.getName();
                     String itemPath = item.getPath();
-                    int position =getAdapterPosition();
+                    int position = getAdapterPosition();
 
                     filesActivity.openFolder(itemName, itemPath, position);
                 }
@@ -131,21 +141,24 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
             else itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     filesActivity.sendPickedAvatar(item);
                 }
             });
         }
     }
 
+    // returns the type of the view (0 for folders and 1 for images)
     @Override
     public int getItemViewType(int position) {
         return fileList.get(position).getType();
     }
 
+    // this class is used to obtain an image thumbnail (from the image itself), in the background, so the interface does not get freeze until all the thumbnails have been set:
     private static class ThumbnailTask extends AsyncTask<Void,Void,Bitmap> {
 
         private static final String TAG = ThumbnailTask.class.getCanonicalName();
+
+        private final static int THUMB_SIZE = 200;
 
         private int mPosition;
         private FileViewHolder mHolder;
@@ -163,6 +176,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
             try {
                 Multimedia multimedia = fileList.get(mPosition);
 
+                // since folders have a default thumbnail, only images' thumbnails must be generated:
                 if (multimedia.getType() == FileUtils.IMAGE_TYPE) {
                     Bitmap test = getScaledBitmap(fileList.get(mPosition).getPath());
                     thumb = ThumbnailUtils.extractThumbnail(test, THUMB_SIZE, THUMB_SIZE);
@@ -175,6 +189,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
             return thumb;
         }
 
+        // if the thumbnail´s size is bigger than 200pixels, it must be scaled:
         private Bitmap getScaledBitmap(String filePath) {
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -190,6 +205,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileViewHold
         @Override
         protected void onPostExecute(Bitmap bitmap) {
 
+            // once the thumbnail has been generated, it is assigned in the main thread:
             if (mPosition < fileList.size()) {
 
                 fileList.get(mPosition).setBitmapIcon(bitmap);

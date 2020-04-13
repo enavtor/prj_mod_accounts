@@ -8,9 +8,10 @@ import java.util.Comparator;
 
 //Utils for managing sort operations over file lists:
 //@author Eduardo on 24/06/2019.
+
 class SortUtils {
 
-    //Method that returns a sorted multimedia array list:
+    //Method that returns a sorted multimedia array list (by type and name):
     static ArrayList<Multimedia> sortMultimediaList (ArrayList<Multimedia> unsortedList) {
 
         ArrayList<Multimedia> sortedList = new ArrayList<>();
@@ -66,5 +67,4 @@ class SortUtils {
 
         return auxList.get(0).equals(unsorted);
     }
-
 }

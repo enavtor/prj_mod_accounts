@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/header_layout_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/dpi_100dp"
         android:orientation="horizontal">
 
         <TextView
@@ -17,17 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/app_logo_view"
             android:layout_alignParentStart="true"
-            android:textSize="60sp"
+            android:textSize="@dimen/dpi_60sp"
             android:textColor="@color/colorTextSplash"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="45dp"/>
+            android:layout_marginTop="@dimen/dpi_20dp"
+            android:layout_marginStart="@dimen/dpi_45dp"/>
 
         <ImageView
             android:id="@+id/app_logo_view"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/dpi_120dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="43dp"
+            android:layout_marginTop="@dimen/dpi_20dp"
+            android:layout_marginEnd="@dimen/dpi_43dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/header_logo"
             android:contentDescription="@string/app_name" />
@@ -43,7 +43,7 @@
     <RelativeLayout
         android:id="@+id/footer_layout_container"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/dpi_80dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:background="@color/backgroundFooter">
@@ -52,19 +52,19 @@
             android:id="@+id/virtual_back_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
+            android:layout_marginStart="@dimen/dpi_20dp"
+            android:layout_marginEnd="@dimen/dpi_25dp"
             android:layout_alignParentStart="true"
             android:background="@drawable/footer_focus"
             android:clickable="true"
             android:focusable="true"
-            android:padding="7dp">
+            android:padding="@dimen/dpi_7dp">
 
             <ImageView
                 android:id="@+id/virtual_back"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="@dimen/dpi_45dp"
+                android:layout_height="@dimen/dpi_45dp"
                 android:scaleX="0.65"
                 android:scaleY="0.7"
                 android:background="@drawable/back_arrow"
@@ -74,13 +74,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="6dp"
+                android:layout_marginStart="@dimen/dpi_10dp"
+                android:layout_marginEnd="@dimen/dpi_6dp"
                 android:layout_toEndOf="@id/virtual_back"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/back"
                 android:textColor="@android:color/black"
-                android:textSize="25sp" />
+                android:textSize="@dimen/dpi_25sp" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

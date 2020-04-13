@@ -21,8 +21,9 @@ import com.droidmare.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 
-//Main activity declaration
+//Files activity declaration (browser activity for selecting an avatar)
 //@author Eduardo on 12/06/2019.
+
 public class FilesActivity extends Activity {
 
     public static final String ROOT_PATH = "storage/emulated/0";
@@ -63,7 +64,6 @@ public class FilesActivity extends Activity {
         setContentView(R.layout.activity_files);
 
         initViews();
-        setButtonsBehaviour();
     }
 
     @Override
@@ -103,6 +103,7 @@ public class FilesActivity extends Activity {
         return super.dispatchKeyEvent(event);
     }
 
+    //Method tat initializes this activity's views:
     private void initViews() {
 
         mainTitle = findViewById(R.id.titleMain);
@@ -114,8 +115,18 @@ public class FilesActivity extends Activity {
         virtualBackButton = findViewById(R.id.virtual_back_layout);
 
         setDisplayedFragment(true, ROOT_PATH);
+
+        //Virtual back Button:
+        virtualBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+            }
+        });
     }
 
+    //Method that is used to update the files fragment whenever a folder is opened or a back navigation is performed:
     private void setDisplayedFragment(boolean isFirstExecution, String path) {
 
         filesList = FileUtils.getDirectoryFiles(path);
@@ -130,6 +141,7 @@ public class FilesActivity extends Activity {
         fragTrans.commit();
     }
 
+    //Method that updates the description view when a file gets the focus:
     public void changeFileDescriptionText(final String text) {
         viewsHandler.post(new Runnable() {
             @Override
@@ -139,6 +151,7 @@ public class FilesActivity extends Activity {
         });
     }
 
+    //Method used to navigate to a new folder:
     public void openFolder(String name, String path, int folderPosition) {
 
         elementToFocus = positionToScrollTo = 0;
@@ -152,6 +165,7 @@ public class FilesActivity extends Activity {
         String folderName = historyElementAttributes[HISTORY_NAME_INDEX];
         String folderPath = historyElementAttributes[HISTORY_PATH_INDEX];
 
+        //Whenever a folder is opened, its attributes are added to the history, so that a backwards navigation can be correctly performed:
         currentFolder = folderName + HISTORY_SEPARATOR + folderPath + HISTORY_SEPARATOR + folderPosition + HISTORY_SEPARATOR + getScrolledPosition();
 
         pathsHistory.set(currentIndex, currentFolder);
@@ -163,22 +177,12 @@ public class FilesActivity extends Activity {
         mainTitleText = name;
     }
 
+    //Method that returns the position to which the list have been scrolled before opening a new folder, so it can be restored when the user navigates to the previous folder:
     private int getScrolledPosition() {
         return filesFragment.getCurrentScrolledPosition();
     }
 
-    private void setButtonsBehaviour() {
-
-        //Virtual back Button:
-        virtualBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
-                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
-            }
-        });
-    }
-
+    //In order to avoid misbehaviours while performing the circular navigation, the footer buttons focusability must be set to false during the aforementioned navigation:
     private void checkButtonsFocusability(KeyEvent event) {
         View focusedView = getCurrentFocus();
 
@@ -192,22 +196,28 @@ public class FilesActivity extends Activity {
         }
     }
 
+    //Method that changes the footer button focusability as long as the new value is different from the current one:
     private void changeButtonsFocusability(boolean focusability) {
         if (virtualBackButton.isFocusable() != focusability) {
             virtualBackButton.setFocusable(focusability);
         }
     }
 
+    //Method used to update the title text with the current folder's name:
     public void setViewsAfterFragmentLoaded() {
         mainTitle.setText(mainTitleText);
     }
 
+    //Method that returns the current directory's file list:
     public ArrayList<Multimedia> getFilesList() { return filesList; }
 
+    //Method that returns the element that must receive the focus when performing a backwards navigation:
     public int getElementToFocus() { return elementToFocus; }
 
+    //Method that returns the position to which the list must be scrolled after performing a backwards navigation:
     public int getPositionToScrollTo() { return positionToScrollTo; }
 
+    //Method that encodes the selected avatar image and sends it back to the MainActivity:
     public void sendPickedAvatar(Multimedia avatar) {
 
         Bitmap avatarBitmap = BitmapFactory.decodeFile(avatar.getPath());

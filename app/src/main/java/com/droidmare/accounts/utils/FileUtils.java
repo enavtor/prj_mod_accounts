@@ -8,12 +8,13 @@ import java.util.Arrays;
 
 //Utils form managing files declaration
 //@author Eduardo on 11/06/2019.
+
 public class FileUtils {
 
     public static final int FOLDER_TYPE = 0;
     public static final int IMAGE_TYPE = 1;
 
-    //Method that returns the the list of files contained within the path passed as parameter:
+    //Method that returns the list of files contained within the path passed as parameter:
     public static ArrayList<Multimedia> getDirectoryFiles(String directoryPath) {
 
         ArrayList<String> imageFormats = new ArrayList<>(Arrays.asList("png","jpg","jpeg"));
@@ -30,6 +31,7 @@ public class FileUtils {
 
             fileName = fileName.substring(0, fileExtensionStartIndex > -1 ? fileExtensionStartIndex : fileName.length());
 
+            //For each image and folder contained within the current directory, a Multimedia object will be instantiated:
             Multimedia multimedia = new Multimedia(fileName, file.getPath());
 
             if (file.isDirectory()) {
@@ -49,6 +51,7 @@ public class FileUtils {
             if (multimedia.getType() != -1) multimediaList.add(multimedia);
         }
 
+        //Before the list is returned, it is sorted based on the file's type and name:
         return SortUtils.sortMultimediaList(multimediaList);
     }
 }

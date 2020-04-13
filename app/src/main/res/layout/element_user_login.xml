@@ -8,27 +8,27 @@
 
     <EditText
         android:id="@+id/nickname_input_box"
-        android:layout_width="550dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/dpi_550dp"
+        android:layout_height="@dimen/dpi_60dp"
         android:background="@drawable/text_box_background"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="@dimen/dpi_8dp"
         android:textColor="@color/black"
-        android:textSize="34sp"
+        android:textSize="@dimen/dpi_34sp"
         android:hint="@string/hint_login_nickname"
         android:textColorHint="@color/grey_light_darker"
         android:textCursorDrawable="@drawable/text_cursor_color" />
 
     <EditText
         android:id="@+id/password_input_box"
-        android:layout_width="550dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="@dimen/dpi_550dp"
+        android:layout_height="@dimen/dpi_60dp"
+        android:layout_marginTop="@dimen/dpi_20dp"
         android:background="@drawable/text_box_background"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="@dimen/dpi_8dp"
         android:textColor="@color/black"
-        android:textSize="34sp"
+        android:textSize="@dimen/dpi_34sp"
         android:hint="@string/hint_login_password"
         android:textColorHint="@color/grey_light_darker"
         android:textCursorDrawable="@drawable/text_cursor_color" />
@@ -36,7 +36,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/dpi_30dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -44,19 +44,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_buttons_background"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/dpi_20dp"
             android:clickable="true"
             android:focusable="true"
-            android:padding="2dp">
+            android:padding="@dimen/dpi_2dp">
 
             <TextView
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dpi_250dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="@dimen/dpi_2dp"
                 android:text="@string/login_button"
                 android:textColor="@color/white"
-                android:textSize="27sp" />
+                android:textSize="@dimen/dpi_27sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,16 +66,16 @@
             android:background="@drawable/dialog_buttons_background"
             android:clickable="true"
             android:focusable="true"
-            android:padding="2dp">
+            android:padding="@dimen/dpi_2dp">
 
             <TextView
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dpi_250dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="@dimen/dpi_2dp"
                 android:text="@string/create_new_user_button"
                 android:textColor="@color/white"
-                android:textSize="27sp" />
+                android:textSize="@dimen/dpi_27sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

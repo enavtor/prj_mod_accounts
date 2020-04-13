@@ -2,6 +2,7 @@ package com.droidmare.accounts.views.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 //Files fragment declaration
 //@author Eduardo on 12/06/2019.
+
 public class FilesFragment extends Fragment {
 
     public static final String NAME = "files_fragment";
@@ -74,7 +76,7 @@ public class FilesFragment extends Fragment {
         fileGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
-            public void onScrollStateChanged(RecyclerView view, int state) {
+            public void onScrollStateChanged(@NonNull RecyclerView view, int state) {
                 if (state == SCROLL_STATE_IDLE && positionToFocus != -1) {
                     RecyclerView.ViewHolder item = fileGrid.findViewHolderForAdapterPosition(positionToFocus);
                     if (item != null) item.itemView.requestFocus();
@@ -83,13 +85,14 @@ public class FilesFragment extends Fragment {
             }
 
             @Override
-            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled (@NonNull RecyclerView recyclerView, int dx, int dy) {
                 currentScrolledY += dy;
             }
         });
 
         currentScrolledY = 0;
 
+        //After the file grid has been updated and rendered, it must be scrolled to the position indicated by positionToScroll:
         fileGrid.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             private final int positionToScrollTo = activity.getPositionToScrollTo();
@@ -97,9 +100,11 @@ public class FilesFragment extends Fragment {
             @Override
             public void onGlobalLayout() {
 
+                //First, the grid must be scrolled to the correct position:
                 if (currentScrolledY == 0 && positionToFocus > 9)
                     fileGrid.scrollBy(0, positionToScrollTo);
 
+                //Once the list is on the necessary position, the element that must get the focus can be focused:
                 else if (currentScrolledY == positionToScrollTo || positionToFocus <= 9) {
 
                     if (positionToFocus > 4 && positionToFocus <= 9)
@@ -111,6 +116,7 @@ public class FilesFragment extends Fragment {
 
                     activity.setViewsAfterFragmentLoaded();
 
+                    //This listener can be removed since, at this point, the grid status is the correct one:
                     fileGrid.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
@@ -194,6 +200,7 @@ public class FilesFragment extends Fragment {
         return false;
     }
 
+    //Method that checks the visibility of the element that must get the focus after performing a backwards navigation:
     private void checkElementVisibility() {
         //If the element is visible (element != null) it will be focused directly, otherwise a scroll operation will be performed:
         RecyclerView.ViewHolder element = fileGrid.findViewHolderForAdapterPosition(positionToFocus);
@@ -206,9 +213,12 @@ public class FilesFragment extends Fragment {
         else fileGrid.smoothScrollToPosition(positionToFocus);
     }
 
+    //Method that returns the whole file grid view, so the FilesActivity can handle the circular navigation:
     public RecyclerView getFileGridView() { return fileGrid; }
 
+    //Method that returns the position to which the list have been scrolled so he FilesActivity can store it before opening a new folder:
     public int getCurrentScrolledPosition() { return currentScrolledY; }
 
+    //Method that updates the description view text:
     public void setDescriptionText(String text) { descriptionText.setText(text); }
 }

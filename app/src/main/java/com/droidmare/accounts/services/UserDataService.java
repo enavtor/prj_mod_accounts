@@ -5,7 +5,8 @@ import android.content.Intent;
 import com.droidmare.common.services.CommonUserData;
 
 //User data receiver service declaration
-//@author Eduardo on 22/05/2018.
+//@author Eduardo on 22/05/2019.
+
 public class UserDataService extends CommonUserData {
 
     private static final String TAG = UserDataService.class.getCanonicalName();

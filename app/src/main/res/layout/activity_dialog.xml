@@ -16,39 +16,39 @@
 
         <TextView
             android:id="@+id/dialog_title"
-            android:layout_width="700dp"
+            android:layout_width="@dimen/dpi_700dp"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:padding="15dp"
+            android:padding="@dimen/dpi_15dp"
             android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:textSize="@dimen/dpi_30sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
+            android:layout_marginBottom="@dimen/dpi_10dp"
             android:layout_gravity="center"
-            android:padding="10dp">
+            android:padding="@dimen/dpi_10dp">
 
             <LinearLayout
                 android:id="@+id/dialog_affirmative_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/dialog_buttons_background"
-                android:layout_marginEnd="60dp"
+                android:layout_marginEnd="@dimen/dpi_60dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="2dp">
+                android:padding="@dimen/dpi_2dp">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="@dimen/dpi_220dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dpi_2dp"
                     android:text="@string/dialog_affirmative"
                     android:textColor="@color/white"
-                    android:textSize="27sp" />
+                    android:textSize="@dimen/dpi_27sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -58,16 +58,16 @@
                 android:background="@drawable/dialog_buttons_background"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="2dp">
+                android:padding="@dimen/dpi_2dp">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="@dimen/dpi_220dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dpi_2dp"
                     android:text="@string/dialog_negative"
                     android:textColor="@color/white"
-                    android:textSize="27sp" />
+                    android:textSize="@dimen/dpi_27sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

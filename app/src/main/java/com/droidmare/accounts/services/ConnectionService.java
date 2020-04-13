@@ -27,11 +27,13 @@ import java.net.URL;
 public class ConnectionService extends CommonIntentService {
 
     //API base URL:
-    public static final String BASE_URL = "http://192.168.1.49:3000/user/";
-    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/user/";
+    public static final String BASE_URL = "http://droidmareapi.ddns.net:5006/user/";
 
     //Intent fields:
     public static final String REQUESTED_OPERATION_FIELD = "requestedOperation";
+
+    //Response json fields:
+    private static final String OPERATION_SUCCESS = "success";
 
     //API request operations:
     public static final String CREATE = "POST";
@@ -97,19 +99,26 @@ public class ConnectionService extends CommonIntentService {
             userPass = intent.getStringExtra(UserDataService.USER_PASSWORD_FIELD);
         }
 
+        //If the requested operation was not a login one, the user json must be created here, since it will not be returned after the request is sent:
         else {
             userJsonString = intent.getStringExtra(UserDataService.USER_JSON_FIELD);
             try {
                 JSONObject userJson = new JSONObject(userJsonString);
+
+                //The avatar is stored within the API as an array, so that when using tools like ARC or PostMan the field can be collapsed, since it is considerably long:
+                String[] avatar = {userJson.getString(UserDataService.USER_AVATAR_FIELD)};
+                userJson.put(UserDataService.USER_AVATAR_FIELD, avatar);
+
                 if (userJson.has(UserDataService.USER_NICKNAME_FIELD)) {
                     userNick = userJson.getString(UserDataService.USER_NICKNAME_FIELD);
                     userPass = userJson.getString(UserDataService.USER_PASSWORD_FIELD);
                 }
             } catch (JSONException jsonException) {
-                Log.e(COMMON_TAG, "onHandleIntent(103). JSONException: " + jsonException.getMessage());
+                Log.e(COMMON_TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
             }
         }
 
+        //Now the request can be sent to the api and the requested operation can be performed:
         sendRequest(requestedOperation, userNick, userPass);
 
         if (requestedLogin) performLogin();
@@ -118,37 +127,57 @@ public class ConnectionService extends CommonIntentService {
             case CREATE:
             case EDIT:
                 try {
-                    if (showMessageAndDeleteData()) launchLogin();
+                    if (showMessageAndDeleteData(requestedOperation)) launchLogin();
                 } catch (JSONException jsonException) {
                     Log.e(COMMON_TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
                 break;
             case DELETE:
                 try {
-                    if (showMessageAndDeleteData() && isMainActivityInstantiated())
+                    if (showMessageAndDeleteData(requestedOperation) && isMainActivityInstantiated())
                         mainActivityReference.get().logout();
                 } catch (JSONException jsonException) {
                     Log.e(COMMON_TAG, "onHandleIntent. JSONException: " + jsonException.getMessage());
                 }
         }
 
-        else ToastUtils.makeCustomToast(getApplicationContext(), "Connection error, operation could not be performed (" + requestedOperation + ")");
+        else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.operation_error));
     }
 
-    private boolean showMessageAndDeleteData() throws JSONException {
+    //Method that shows a message informing the user whether or not the operation was successful and that resets the application data (by starting the data deleter service):
+    private boolean showMessageAndDeleteData(String requestedOperation) throws JSONException {
 
         JSONObject userJson = new JSONObject(userJsonString);
 
-        String message = userJson.getString("message");
-        boolean success = userJson.getBoolean("success");
+        boolean success = userJson.getBoolean(OPERATION_SUCCESS);
+
+        String message = getOperationMessage(requestedOperation, success);
 
         ToastUtils.makeCustomToast(getApplicationContext(), message);
 
         if (success) ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), DataDeleterService.class));
 
+        hideLoadingScreen();
+
         return success;
     }
 
+    //Method that, based on the requested operation and in whether or not it was successful, retrieves the appropriate message string:
+    private String getOperationMessage(String operation, boolean success) {
+        switch (operation) {
+            case CREATE:
+                if (success) return getString(R.string.operation_create_success);
+                else return getString(R.string.operation_create_fail);
+            case EDIT:
+                if (success) return getString(R.string.operation_edit_success);
+                else return getString(R.string.operation_edit_fail);
+            case DELETE:
+                return getString(R.string.operation_delete_success);
+            default: return "";
+        }
+    }
+
+    //Method that launches the login operation in order to update the MainActivity's view:
     private void launchLogin() {
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -156,7 +185,7 @@ public class ConnectionService extends CommonIntentService {
                 if (isMainActivityInstantiated())
                     mainActivityReference.get().login(userNick, userPass);
             }
-        }, 5000);
+        }, 3000);
     }
 
     //Method that establishes a connection to the API and performs the required operations based on the requestedOperation param:
@@ -224,13 +253,13 @@ public class ConnectionService extends CommonIntentService {
 
             case 500:
                 hideLoadingScreen();
-                String invalidIdMessage = getResources().getString(R.string.id_not_valid) + userNick + " / " + userPass;
+                String invalidIdMessage = getString(R.string.id_not_valid, userNick, userPass);
                 ToastUtils.makeCustomToast(getApplicationContext(), invalidIdMessage);
                 break;
 
             default:
                 hideLoadingScreen();
-                String connectionError = getResources().getString(R.string.connection_error) + " Code: " + responseCode;
+                String connectionError = getString(R.string.connection_error);
                 ToastUtils.makeCustomToast(getApplicationContext(), connectionError);
         }
     }
@@ -240,6 +269,11 @@ public class ConnectionService extends CommonIntentService {
 
         try {
             JSONObject userJson = new JSONObject(userJsonString);
+
+            //The avatar is stored within the API as an array, so that when using tools like ARC or PostMan the field can be collapsed, since it is considerably long:
+            String avatar = userJson.getJSONArray(UserDataService.USER_AVATAR_FIELD).getString(0);
+            userJson.put(UserDataService.USER_AVATAR_FIELD, avatar);
+            userJsonString = userJson.toString();
 
             String name = userJson.getString(UserDataService.USER_NAME_FIELD);
             String surname = userJson.getString(UserDataService.USER_SURNAME_FIELD);
@@ -262,7 +296,6 @@ public class ConnectionService extends CommonIntentService {
             //The execution thread is going to be paused to let the UserDataService
             //set the user info before it is displayed on the main activity user info view:
             while (!UserDataService.infoSet) {
-                Log.d("PAUSEDTHREAD", "Paused");
                 pauseServiceThread(50);
             }
 

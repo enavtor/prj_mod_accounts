@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import com.droidmare.accounts.R;
 import com.droidmare.common.utils.ToastUtils;
+import com.droidmare.common.views.activities.CommonActivity;
 
 //Activity for displaying a dialog before performing an operation
 //@author Eduardo on 31/08/2019.
-public class DialogActivity extends AppCompatActivity {
+
+public class DialogActivity extends CommonActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,6 @@ public class DialogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dialog);
 
         initializeViews();
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-
-        if (event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
-
-        else return super.dispatchKeyEvent(event);
     }
 
     //Initialization of the activity views and buttons:

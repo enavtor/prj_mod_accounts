@@ -6,6 +6,9 @@ import android.os.Parcelable;
 
 import java.io.File;
 
+//Multimedia item model declaration
+//@author Eduardo on 04/07/2019.
+
 public class Multimedia implements Parcelable {
 
     private String name;
@@ -59,7 +62,6 @@ public class Multimedia implements Parcelable {
         dest.writeInt(type);
     }
 
-    @SuppressWarnings("unused")
     public static final Creator<Multimedia> CREATOR = new Creator<Multimedia>() {
         @Override
         public Multimedia createFromParcel(Parcel in) {
